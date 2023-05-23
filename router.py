@@ -27,7 +27,7 @@ from app.converter.sbol_convert import export
 from app.graph.world_graph import WorldGraph
 from app.utility.login import LoginHandler
 
-from app.graph_query.handler import GraphQueryHandler
+from app.tools.graph_query.handler import GraphQueryHandler
 from app.tools.visualiser.design import DesignDash
 from app.tools.visualiser.editor import EditorDash
 from app.tools.visualiser.cypher import CypherDash
@@ -59,7 +59,7 @@ login_graph_name = "login_manager"
 
 logger = ChangeLogger()
 graph = WorldGraph(uri,db_auth,reserved_names=[login_graph_name],logger=logger)
-tg_interface = GraphQueryHandler(graph.truth)
+
 
 # Tools
 design_dash = DesignDash(__name__, server, graph)
@@ -67,9 +67,11 @@ editor_dash = EditorDash(__name__, server, graph)
 cypher_dash = CypherDash(__name__, server, graph)
 projection_dash = ProjectionDash(__name__, server, graph)
 truth_dash = TruthDash(__name__, server, graph)
+tg_builder = TruthGraphBuilder(graph.truth)
+tg_query = GraphQueryHandler(graph.truth)
 enhancer = Enhancer(graph)
 evaluator = Evaluator(graph)
-tg_builder = TruthGraphBuilder(graph.truth)
+
 
 design_dash.app.enable_dev_tools(debug=True)
 cypher_dash.app.enable_dev_tools(debug=True)
@@ -170,10 +172,10 @@ def graph_admin():
             success_string = f'Truth Graph Saved.'
         elif tg_form.tg_reseed.data:
             graph.truth.drop()
-            enhancer.seed_truth_graph()
+            tg_builder.seed()
             success_string = f'Reset Truth Graph'
         elif tg_form.tg_expand.data:
-            enhancer.expand_truth_graph()
+            tg_builder.expand()
             success_string = f'Expanded Truth Graph'
         elif tg_form.tg_restore.data:
             fn = os.path.join(truth_save_dir, request.form["files"])
@@ -326,7 +328,44 @@ def modify_graph():
 @server.route('/truth-query', methods=['GET', 'POST'])
 @login_required
 def truth_query():
-    return # Go from ere...
+    handlers = tg_query.get_handlers()
+    query_form = forms.build_truth_query_form(handlers)
+    results = None
+    info_string = None
+    no_results = False
+    if request.method == "POST":
+        if query_form.submit_query.id in request.form:
+            qd = query_form.query.data
+            qt = query_form.query_type.data
+            results = tg_query.query(qt,qd)
+            results = forms.build_tgrf(results,qt)
+        else:
+            for identifier,action in request.form.items():
+                if (identifier == query_form.query.id or 
+                    identifier == query_form.query_type.id):
+                    continue
+                source,result,qt = identifier.split(" - ")
+                if action == "load":
+                    session["cypher_entities"] = result
+                    return redirect(cypher_dash.pathname)
+                elif action == "positive":
+                    tg_query.feedback(qt,source,result)
+                    info_string = "Positive Feedback integrated."
+                elif action == "negative":
+                    tg_query.feedback(qt,source,result,positive=False)
+                    info_string = "Negative Feedback integrated."
+                else:
+                    raise NotImplementedError(action)
+            qd = query_form.query.data
+            qt = query_form.query_type.data
+            results = tg_query.query(qt,qd)
+            results = forms.build_tgrf(results,qt)
+        if len(results) == 0:
+            no_results=True
+        return render_template('truth_query.html', query_bar=query_form,
+                               results=results,info_string=info_string,
+                               no_results=no_results)
+    return render_template('truth_query.html', query_bar=query_form)
 
 @server.route('/visualiser', methods=['GET', 'POST'])
 @login_required

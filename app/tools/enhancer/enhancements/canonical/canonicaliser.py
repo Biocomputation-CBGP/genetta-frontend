@@ -30,7 +30,7 @@ from app.tools.enhancer.enhancements.abstract_enhancements import AbstractEnhanc
 import uuid
 from app.converter.sbol_convert import convert
 
-class DesignCanonicaliser(AbstractEnhancement):
+class Canonicaliser(AbstractEnhancement):
     def __init__(self, world_graph, miner):
         super().__init__(world_graph, miner)
 
@@ -61,7 +61,7 @@ class DesignCanonicaliser(AbstractEnhancement):
 
     def _get_absolute_references(self,entity):
         name = entity.name
-        record = self._miner.get_external(name)
+        record = self._miner.get(name)
         if record is not None:
             return self._miner.get_graph_subject(record,[name])
         res = self._wg.truth.synonyms.get(synonym=name)
@@ -71,7 +71,7 @@ class DesignCanonicaliser(AbstractEnhancement):
                 return res[0].n
         if hasattr(entity,"hasSequence"):
             sequence = entity.hasSequence
-            record = self._miner.full_sequence_match(sequence)
+            record = self._miner.sequence_match(sequence)
             if record is not None:
                 return record
         if hasattr(entity,"description"):
@@ -111,9 +111,9 @@ class DesignCanonicaliser(AbstractEnhancement):
                     _add_feedback(r.n,r.confidence,query)
             else:
                 # Try mine via external.
-                records = list(self._miner.query_external(query,lazy=True))
+                records = list(self._miner.query(query,lazy=True))
                 if len(records) != 0:
-                    graphs = [self._miner.get_external(r) for r in records[0] if r not in feedback]
+                    graphs = [self._miner.get(r) for r in records[0] if r not in feedback]
                     for leaf in self._miner.get_leaf_subjects(graphs,e_type,query):
                         _add_feedback(leaf,0,f'Using Query: {query}')
         return feedback
@@ -134,11 +134,11 @@ class DesignCanonicaliser(AbstractEnhancement):
             
         gn = str(uuid.uuid4())
         if parent is not None:
-            fn = self._miner.get_external(parent)
+            fn = self._miner.get(parent)
             if fn is not None:
                 convert(fn,self._wg.driver,gn)
         for p in potentials:
-            fn = self._miner.get_external(p)
+            fn = self._miner.get(p)
             convert(fn,self._wg.driver,gn)
         p_gn = str(uuid.uuid4())
         dg = self._wg.get_design(dg.name + [gn])

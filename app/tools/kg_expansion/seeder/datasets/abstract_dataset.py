@@ -45,7 +45,7 @@ class AbstractDatabase(ABC):
                 cd_seq = cd_seq[0].lower()
                 if cd_seq in existing_seqs:
                     graph.replace_component_definition(cd,existing_seqs[cd_seq])
-                    self._graph.synonyms.positive(existing_seqs[cd_seq],cd)
+                    self._graph.synonyms.positive(existing_seqs[cd_seq],cd,score=100)
                     continue
                 o_type_map = self._add_cd(cd,graph,cd_types,model_roots,o_type_map)
                 highest_score = [0,None]
@@ -63,7 +63,7 @@ class AbstractDatabase(ABC):
                         continue
                     name = self._get_name(e)
                     if cd_name in name or name in cd_name:
-                        self._graph.synonyms.positive(e,cd)
+                        self._graph.synonyms.positive(e,cd,score=100)
                         break
                 else:
                     o_type_map = self._add_cd(cd,graph,cd_types,model_roots,o_type_map)

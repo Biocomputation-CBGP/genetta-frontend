@@ -1,3 +1,4 @@
+import re
 from  app.graph.utility.graph_objects.node import Node
 from  app.graph.neo4j_interface.operations import NodeOperations
 from  app.graph.neo4j_interface.operations import EdgeOperations
@@ -119,6 +120,55 @@ class QueryBuilder:
     def get_edge_properties(self):
         return "MATCH (n)-[r]-(m) RETURN properties(r)"
 
+    def create_text_index(self,name,labels,on):
+        l = "|".join([f'`{lab}`' for lab in labels])
+        o = ""
+        for index,ele in enumerate(on):
+            if is_url(ele):
+                ele = f'`{ele}`'
+            o += f'n.{ele}'
+            if index < len(on)-1:
+                o += ","
+        return f'CREATE FULLTEXT INDEX {name} FOR (n:{l}) ON EACH [{o}]'
+
+    def drop_text_index(self,name):
+        return f'DROP INDEX {name}'
+    
+    def list_text_indexes(self):
+        return 'SHOW FULLTEXT INDEXES'
+    
+    def query_text_index(self,index_name,values,graph_names=None,
+                         predicate=None,wildcard=False,fuzzy=False):
+        qry_str  = ""
+        if predicate is None:
+            predicate = "OR"
+        if graph_names is not None:
+            graph_names = self._escape_sequence(str(graph_names))
+            qry_str +=  f'graph_name:{graph_names} AND '
+        for index,(k,v) in enumerate(values.items()):
+            if not isinstance(v,list):
+                v = [v]
+            if is_url(k):
+                k = f'`{self._escape_sequence(k)}`'
+            if index == 0:
+                qry_str += "("
+            for index2,ele in enumerate(v):
+                if is_url(ele):
+                    ele = f'`{ele}`'
+                if wildcard:
+                    qry_str += f'{k}:*{ele}{"~" if fuzzy else ""} OR '
+                qry_str += f'{k}:{ele}{"~" if fuzzy else ""}'
+                if index2 < len(v)-1:
+                    qry_str += f' {predicate} '
+            if index < len(values)-1:
+                qry_str += f' {predicate} '
+            else:
+                qry_str += ")"
+        return f'CALL db.index.fulltext.queryNodes("{index_name}", "{qry_str}") YIELD node, score'
+    
+    def _escape_sequence(self,string):
+        return string.replace("[","\[").replace("]","\]").replace("/","\/").replace(":","\:")
+    
     def get_isolated_nodes(self,identity=[],predicate="ALL",**kwargs):
         where = ""
         for index, i in enumerate(identity):
@@ -337,3 +387,15 @@ class QueryBuilder:
             where = "WHERE " + where
 
         return f'MATCH {n}-{e}-{">" if directed else ""}{v} {where}'
+    
+
+def is_url(string):
+    # Regular expression pattern for URL matching
+    url_pattern = re.compile(
+        r'^(?:http|ftp)s?://'  # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
+        r'localhost|'  # localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or IP
+        r'(?::\d+)?'  # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+    return re.match(url_pattern, string) is not None

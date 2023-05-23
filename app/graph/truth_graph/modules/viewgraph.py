@@ -5,6 +5,7 @@ from app.graph.utility.model.model import model
 
 all_i_types = [str(i[1]["key"]) for i in model.get_derived(model.identifiers.objects.interaction)]
 nv_derivative = str(model.identifiers.external.derivative)
+nv_synonym = str(model.identifiers.external.synonym)
 class ViewGraph:
     def __init__(self, graph=None): 
         self._graph = graph if graph is not None else nx.MultiDiGraph()
@@ -13,6 +14,12 @@ class ViewGraph:
         def inner(self,n=None):
             if isinstance(n,ReservedNode):
                 n = n.id
+            elif n in self.nodes():
+                n = n
+            else:
+                for node in self.nodes():
+                    if node.get_key() == n:
+                        n = node.id
             return func(self,n)
         return inner
         
@@ -30,6 +37,12 @@ class ViewGraph:
         for n in self._graph.nodes:
             yield n
 
+    def __add__(self,viewgraph):
+        return self.__class__(nx.compose(self._graph,viewgraph._graph))
+    
+    def __iadd__(self,viewgraph):
+        return self.__class__(nx.compose(self._graph,viewgraph._graph))
+        
     def _node(self,labels,id=None,properties=None):
         if properties is None:
             props = {}
@@ -45,32 +58,64 @@ class ViewGraph:
         return ReservedEdge(n,v,e,**props)
 
     def derivatives(self,node=None):
-        for edge in self.out_edges(node):
+        o_edges = list(self.out_edges(node))
+        for edge in o_edges:
             if edge.get_type() == nv_derivative:
                 yield edge
         for edge in self.in_edges(node):
+            if edge in o_edges:
+                continue
             if edge.get_type() == nv_derivative:
-                yield ReservedEdge(edge.v,edge.n,edge.get_type(),
+                e = ReservedEdge(edge.v,edge.n,edge.get_type(),
                                    **edge.get_properties())
+                if e in o_edges:
+                    continue
+                yield e
+    
+    def synonyms(self,canonical=None,synonym=None):
+        if isinstance(canonical,ReservedNode):
+            canonical = canonical.get_key()
+        if isinstance(synonym,ReservedNode):
+            synonym = synonym.get_key()
+        if canonical is not None:
+            for edge in self.out_edges(canonical):
+                if edge.get_type() != nv_synonym:
+                    continue
+                if synonym is None:
+                    yield edge
+                elif edge.v.get_key() == synonym:
+                    yield edge
+        elif synonym is not None:
+            for edge in self.in_edges():
+                if edge.get_type() != nv_synonym:
+                    continue
+                if edge.v.get_key() == synonym:
+                    yield edge
+                if edge.v.name == synonym:
+                    yield edge
                 
-    def interactions(self,interaction=None,entity=None,i_type=None):
+        else:
+            for edge in self.edges():
+                if edge.get_type() != nv_synonym:
+                    continue
+                yield edge
+
+
+    def interactions(self,interaction=None,participant=None,i_type=None):
         if i_type is None:
             i_type = all_i_types
         if not isinstance(i_type,list):
             i_type = [i_type]
 
-        if entity is not None:
-            for edge in self.in_edges(entity):
+        if participant is not None:
+            for edge in self.in_edges(participant):
                 if interaction is not None and edge.n.get_key() == interaction:
                     return edge.n
-                if edge.n.get_type() in i_type:
+                if interaction is None and edge.n.get_type() in i_type:
                     yield edge.n
-        else:
-            for node in self.nodes():
-                if interaction is not None and node.get_key() == interaction:
-                    return node
-                if node.get_type() in i_type:
-                    yield node
+        elif interaction is not None:
+            for edge in self.out_edges(interaction):
+                yield edge
 
 
     def interaction_elements(self,interaction):
@@ -100,11 +145,18 @@ class ViewGraph:
     def get_node(self,n=None):
         if n is None:
             return list(self.nodes())
-        data = self._graph.nodes[n]
-        props = data.copy()
-        labels = props["key"]
-        del props["key"]
-        return self._node(labels,id=n,properties=props)
+        try:
+            data = self._graph.nodes[n]
+            props = data.copy()
+            labels = props["key"]
+            del props["key"]
+            return self._node(labels,id=n,properties=props)
+        except KeyError:
+            for node in self.nodes():
+                if node.get_key() == n:
+                    return node
+            return None
+        
 
     @resolve_node
     def in_edges(self, node=None):

@@ -6,10 +6,9 @@ sys.path.insert(0, os.path.join("..",".."))
 sys.path.insert(0, os.path.join("..","..",".."))
 sys.path.insert(0, os.path.join("..","..","..",".."))
 from app.graph.world_graph import WorldGraph
-from app.tools.enhancer.enhancer import Enhancer
 from app.graph.utility.model.model import model
-from app.graph.truth_graph.modules.interaction import InteractionModule
-from app.tools.enhancer.enhancements.interaction.derivative import TruthDerivative
+from app.tools.kg_expansion.expansions.derivative import TruthDerivative
+from app.tools.data_miner.data_miner import data_miner
 curr_dir = os.path.dirname(os.path.realpath(__file__))
 
 db_host = os.environ.get('NEO4J_HOST', 'localhost')
@@ -31,15 +30,13 @@ class TestDerivativeExpansion(unittest.TestCase):
     def setUpClass(self):
         self.wg = WorldGraph(uri,db_auth,reserved_names=[login_graph_name])
         self.tg = self.wg.truth
-        self.enhancer = Enhancer(self.wg)
-        self.im = InteractionModule(self.wg.truth)
 
     @classmethod
     def tearDownClass(self):
         pass
     
-    def test_tg_derivative_enhancements(self):
-        ppe = TruthDerivative(self.wg,self.enhancer._miner)
+    def test_derivative_expansion(self):
+        ppe = TruthDerivative(self.wg,data_miner)
         pre_e = self.tg.edges()
         ppe.enhance()
         post_e = self.tg.edges()

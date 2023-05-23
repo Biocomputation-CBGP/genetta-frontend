@@ -2,7 +2,7 @@ from app.tools.enhancer.enhancements.abstract_enhancements import AbstractEnhanc
 from app.graph.utility.model.model import model
 
 
-class DesignTextExtraction(AbstractEnhancement):
+class TextExtraction(AbstractEnhancement):
     def __init__(self, world_graph, miner):
         super().__init__(world_graph, miner)
     
@@ -19,10 +19,4 @@ class DesignTextExtraction(AbstractEnhancement):
                     changes = self._potential_change(changes,pe,change,conf,c)
         return changes
         
-class TruthTextExtraction(AbstractEnhancement):
-    def __init__(self, world_graph, miner):
-        super().__init__(world_graph, miner)
-
-    def enhance(self, mode="automated"):
-        return super().enhance(self._wg.truth.name, mode)
             

@@ -15,7 +15,8 @@ from app.graph.neo4j_interface.gds.project import Projection
 from app.graph.neo4j_interface.gds.procedures import Procedures
 from app.graph.utility.model.model import model
 
-def _connect_db(uri,auth):
+
+def _connect_db(uri, auth):
     attempts = 1
     while attempts < 10:
         try:
@@ -24,14 +25,15 @@ def _connect_db(uri,auth):
             print(f'Attempt: {attempts} to connect to neo4j db.')
             time.sleep(5)
             attempts += 1
-            
+
     else:
         raise UnableToConnectError("Can't connect to Neo4j database.")
 
+
 class Neo4jInterface:
-    def __init__(self,uri,auth,reserved_names=None,logger=None):
+    def __init__(self, uri, auth, reserved_names=None, logger=None):
         try:
-            self.driver = _connect_db(uri,auth)
+            self.driver = _connect_db(uri, auth)
         except UnableToConnectError:
             self.driver = None
         self.logger = logger
@@ -53,10 +55,10 @@ class Neo4jInterface:
         for edge in self.edge_query():
             yield edge
 
-    def submit(self,log=True):
+    def submit(self, log=True):
         for qry_str in self.qry_builder.generate(log=log):
             self._run(qry_str)
-    
+
     def add_node(self, key, ntype=None, **kwargs):
         n = self._node(key, ntype, kwargs)
         if "graph_name" not in n.properties:
@@ -67,11 +69,12 @@ class Neo4jInterface:
         if len(list(set(self._rns) & set(n["graph_name"]))) > 0:
             for node in q_nodes:
                 # The node for the reserved graph is already present.
-                if len(_intersection(self._rns,node["graph_name"])) > 0:
+                if len(_intersection(self._rns, node["graph_name"])) > 0:
                     return n
             self.qry_builder.add_create_node(n)
             return n
-        q_nodes = [n for n in q_nodes if len(_intersection(self._rns,n["graph_name"])) == 0]
+        q_nodes = [n for n in q_nodes if len(
+            _intersection(self._rns, n["graph_name"])) == 0]
         if q_nodes != []:
             for q_node in q_nodes:
                 q_node_props = q_node.get_properties()
@@ -88,9 +91,9 @@ class Neo4jInterface:
             self.qry_builder.add_create_node(n)
         return n
 
-    def add_edge(self, n, v, e,**kwargs):
+    def add_edge(self, n, v, e, **kwargs):
         def validate_node(node):
-            if not isinstance(node,Node):
+            if not isinstance(node, Node):
                 raise ValueError(f'{node} must be of type Node')
             if "graph_name" not in node.properties:
                 raise ValueError(f"{node} - Graph Name property required.")
@@ -99,20 +102,21 @@ class Neo4jInterface:
         validate_node(n)
         validate_node(v)
         e = self._edge(n, v, e, kwargs)
-        if "graph_name"  not in e.properties:
+        if "graph_name" not in e.properties:
             raise ValueError("Graph Name property required.")
 
         if self.qry_builder.is_edge_staged(e):
             return e
-        q_edges = self.edge_query(e=e,predicate="ANY")
+        q_edges = self.edge_query(e=e, predicate="ANY")
         if len(list(set(self._rns) & set(e["graph_name"]))) > 0:
             for q_edge in q_edges:
                 # The node for the reserved graph is already present.
-                if len(_intersection(self._rns,q_edge["graph_name"])) > 0:
+                if len(_intersection(self._rns, q_edge["graph_name"])) > 0:
                     return e
             self.qry_builder.add_create_edge(e)
             return e
-        q_edges = [e for e in q_edges if len(_intersection(self._rns,e["graph_name"])) == 0]
+        q_edges = [e for e in q_edges if len(
+            _intersection(self._rns, e["graph_name"])) == 0]
         if q_edges != []:
             for q_edge in q_edges:
                 q_edge_props = q_edge.get_properties()
@@ -129,8 +133,8 @@ class Neo4jInterface:
             self.qry_builder.add_create_edge(e)
         return e
 
-    def remove_edge(self, n,v,e,**kwargs):
-        edge = self._edge(n,v,e,kwargs)
+    def remove_edge(self, n, v, e, **kwargs):
+        edge = self._edge(n, v, e, kwargs)
         self.qry_builder.add_match_edge(edge)
         self.qry_builder.add_remove_edge(edge)
 
@@ -139,29 +143,27 @@ class Neo4jInterface:
         self.qry_builder.add_remove_node(node)
 
     def replace_node_label(self, old_label, new_label, new_props=None, **kwargs):
-        n = Node(old_label,**kwargs)
+        n = Node(old_label, **kwargs)
         self.qry_builder.add_match_node(n)
         if new_props is not None:
-            self.qry_builder.add_set_node(n,new_props)
-        self.qry_builder.add_replace_node_label(n, old_label,new_label)
+            self.qry_builder.add_set_node(n, new_props)
+        self.qry_builder.add_replace_node_label(n, old_label, new_label)
 
     def replace_edge_label(self, old_label, new_label, new_props=None, **kwargs):
-        n = Node(old_label,**kwargs)
+        n = Node(old_label, **kwargs)
         self.qry_builder.add_match_node(n)
         if new_props is not None:
-            self.qry_builder.add_set_node(n,new_props)
-        self.qry_builder.add_replace_node_label(n, old_label,new_label)
+            self.qry_builder.add_set_node(n, new_props)
+        self.qry_builder.add_replace_node_label(n, old_label, new_label)
 
-    def replace_edge_property(self, n,v,e,props, new_properties):
-        edge = self._edge(n,v,e,props)
+    def replace_edge_property(self, n, v, e, props, new_properties):
+        edge = self._edge(n, v, e, props)
         self.qry_builder.add_match_edge(edge)
         self.qry_builder.add_set_edge(edge, new_properties)
 
     def replace_node_property(self, node, new_properties):
         self.qry_builder.add_match_node(node)
         self.qry_builder.add_set_node(node, new_properties)
-
-
 
     def set_edge(self, edge, new_properties):
         self.qry_builder.add_match_edge(edge)
@@ -174,7 +176,7 @@ class Neo4jInterface:
     def merge_nodes(self, edge):
         qry = self.qry_builder.merge_relationship_nodes(edge)
         res = self.run_query(qry)
-        assert(len(res) == 1)
+        assert (len(res) == 1)
         return list(res[0].values())[0]
 
     def remove_graph(self, graph_name):
@@ -190,25 +192,69 @@ class Neo4jInterface:
             if len(gns) == 1:
                 self.qry_builder.add_remove_node(node)
             else:
-                self.qry_builder.add_remove_node_property(node, {"graph_name": graph_name})
+                self.qry_builder.add_remove_node_property(
+                    node, {"graph_name": graph_name})
                 for edge in self.edge_query(n=node):
                     props = edge.get_properties()
                     if "graph_name" not in props:
                         continue
                     self.qry_builder.add_match_edge(edge)
-                    self.qry_builder.add_remove_edge_property(edge, {"graph_name": graph_name})
+                    self.qry_builder.add_remove_edge_property(
+                        edge, {"graph_name": graph_name})
         self.submit()
         if self.logger is not None:
             self.logger.remove_graph(graph_name)
 
-    def drop_graph(self,graph_name):
+    def create_text_index(self, name, labels, on):
+        e_indexes = self._run(self.qry_builder.list_text_indexes())
+        for ei in e_indexes.iterrows():
+            ei = ei[1]
+            ei_labels = ei["labelsOrTypes"]
+            ei_props = ei["properties"]
+            ei_state = ei["state"]
+            if (sorted(ei_labels) == sorted(labels) and
+                sorted(ei_props) == sorted(on) and
+                    ei_state == "ONLINE"):
+                return ei["name"]
+            if ei["name"] == name:
+                self.drop_text_index(name)
+                break
+        qry = self.qry_builder.create_text_index(name, labels, on)
+        self._run(qry)
+        return name
+
+    def drop_text_index(self, name):
+        qry = self.qry_builder.drop_text_index(name)
+        return self._run(qry)
+
+    def query_text_index(self, index_name, values, graph_names=None,
+                         predicate=None, wildcard=False, fuzzy=False):
+        qry = self.qry_builder.query_text_index(index_name, values,
+                                                graph_names=graph_names,
+                                                predicate=predicate,
+                                                wildcard=wildcard,
+                                                fuzzy=fuzzy)
+        print(qry)
+        df = self._run(qry)
+        results = {}
+        for row in df.iterrows():
+            row = row[1]
+            node = row["node"]
+            score = row["score"]
+            key, r_type = self.derive_key_type(node.labels)
+            props = self._go_dict(node)
+            results[self._node(key, r_type, props)] = score
+        return results
+
+    def drop_graph(self, graph_name):
         if not isinstance(graph_name, list):
             graph_name = [graph_name]
         qry = self.qry_builder.remove_graph(graph_name)
         return self._run(qry)
 
     def node_query(self, identity=None, predicate="ALL", **kwargs):
-        qry = self.qry_builder.node_query(identity, predicate=predicate, **kwargs)
+        qry = self.qry_builder.node_query(
+            identity, predicate=predicate, **kwargs)
         results = []
         for index, record in self._run(qry).iterrows():
             for k, v in record.items():
@@ -217,16 +263,21 @@ class Neo4jInterface:
                 results.append(self._node(key, r_type, props))
         return results
 
-    def edge_query(self, n=None, v=None, e=None, n_props={}, v_props={}, e_props={}, directed=True, exclusive=False, predicate="ALL"):
+    def edge_query(self, n=None, v=None, e=None, n_props={}, v_props={},
+                   e_props={}, directed=True, exclusive=False,
+                   predicate="ALL"):
         if isinstance(e, Edge):
             if n is None:
                 n = e.n
             if v is None:
                 v = e.v
             e = e.get_type()
-        qry = self.qry_builder.edge_query(n, v, e, n_props.copy(), v_props.copy(),
-                                          e_props.copy(), directed=directed, exclusive=exclusive, predicate=predicate)
-        #print(qry)
+        qry = self.qry_builder.edge_query(n, v, e, n_props.copy(),
+                                          v_props.copy(),
+                                          e_props.copy(),
+                                          directed=directed,
+                                          exclusive=exclusive,
+                                          predicate=predicate)
         results = []
         for index, record in self._run(qry).iterrows():
             n = record["n"]
@@ -242,7 +293,7 @@ class Neo4jInterface:
         return results
 
     def get_graph_names(self):
-        gns = self.node_property("graph_name",distinct=True)
+        gns = self.node_property("graph_name", distinct=True)
         return list(set(gns))
 
     def node_property(self, prop_name, distinct=False):
@@ -260,9 +311,10 @@ class Neo4jInterface:
     def labels_to_node(self, labels):
         return Node(*self.derive_key_type(labels))
 
-    def get_isolated_nodes(self, predicate="ALL",**kwargs):
+    def get_isolated_nodes(self, predicate="ALL", **kwargs):
         results = []
-        qry = self.qry_builder.get_isolated_nodes(predicate=predicate,**kwargs)
+        qry = self.qry_builder.get_isolated_nodes(
+            predicate=predicate, **kwargs)
         for index, record in self._run(qry).iterrows():
             for k, v in record.items():
                 key, r_type = self.derive_key_type(v.labels)
@@ -294,11 +346,11 @@ class Neo4jInterface:
             results.append(record)
         return results
 
-    def export(self,graph_name):
+    def export(self, graph_name):
         qry = self.qry_builder.export(graph_name)
         res = self._run(qry)["data"][0]
         return res
-    
+
     def derive_key_type(self, labels):
         labels = list(labels)
         if "None" in labels:
@@ -322,7 +374,7 @@ class Neo4jInterface:
         if t == []:
             return k, None
         return k, t
-        
+
     def _run(self, cypher_str):
         if len(cypher_str) == 0:
             #print("WARN:: Empty Cypher Query Entered.")
@@ -336,7 +388,7 @@ class Neo4jInterface:
             n = name
             n.update(properties)
             if self._is_reserved(n):
-                return ReservedNode(n.get_key(),n.get_type(),**n.get_properties())
+                return ReservedNode(n.get_key(), n.get_type(), **n.get_properties())
         elif self._is_reserved(props=properties):
             n = ReservedNode(name, ntype, **properties)
         else:
@@ -351,10 +403,10 @@ class Neo4jInterface:
 
     def _edge(self, n, v, e, properties):
         if self._is_reserved(props=properties):
-            return ReservedEdge(n,v,e, **properties)
+            return ReservedEdge(n, v, e, **properties)
         return Edge(n, v, e, **properties)
 
-    def _is_reserved(self,go=None,props=None):
+    def _is_reserved(self, go=None, props=None):
         if go is not None:
             props = go.properties
         if "graph_name" not in props:
@@ -388,5 +440,6 @@ class Neo4jInterface:
                 final_props[k] = v
         return final_props
 
-def _intersection(l1,l2):
+
+def _intersection(l1, l2):
     return list(set(l1) & set(l2))

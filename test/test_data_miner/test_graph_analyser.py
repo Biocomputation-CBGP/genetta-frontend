@@ -11,10 +11,10 @@ sys.path.insert(0, os.path.join("..","..",".."))
 sys.path.insert(0, os.path.join("..",".."))
 from app.converter.utility.identifiers import identifiers
 from app.graph.utility.model.model import model
-from app.tools.data_miner.data_miner import DataMiner
+from app.tools.data_miner.data_miner import data_miner
 class TestGraphAnalyser(unittest.TestCase):
     def setUp(self):
-        self.dm = DataMiner()
+        self.dm = data_miner
         self.analyser = self.dm._graph_analyser
 
     def tearDown(self):

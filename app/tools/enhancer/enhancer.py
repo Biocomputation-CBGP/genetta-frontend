@@ -1,13 +1,12 @@
 import os
-from app.tools.data_miner.data_miner import DataMiner
+from app.tools.data_miner.data_miner import data_miner
 from app.tools.enhancer.enhancements.design_enhancements import DesignEnhancements
-from app.tools.enhancer.enhancements.truth_enhancements import TruthEnhancements
 tg_initial_fn = os.path.join(os.path.dirname(os.path.realpath(__file__)),"seeder","tg_initial.json")
 
 class Enhancer:
     def __init__(self,graph):
         self._graph = graph
-        self._miner = DataMiner()
+        self._miner = data_miner
         self._enhancements = DesignEnhancements(self._graph,self._miner)
     
     def get_canonical_entity(self,entity,gn):

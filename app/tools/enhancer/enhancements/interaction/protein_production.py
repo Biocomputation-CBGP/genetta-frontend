@@ -8,7 +8,7 @@ nv_pp = model.identifiers.objects.genetic_production
 nv_template = model.identifiers.predicates.template
 nv_product = model.identifiers.predicates.product
 
-class DesignProteinProduction(AbstractEnhancement):
+class ProteinProduction(AbstractEnhancement):
     '''
     It is assumed that all CDS express proteins.
     '''
@@ -41,25 +41,6 @@ class DesignProteinProduction(AbstractEnhancement):
                     edges = [(option,nv_template),
                              (n,nv_product)]
                     self._add_interaction(graph,v,edges)
-
-class TruthProteinProduction(AbstractEnhancement):
-    '''
-    It is assumed that all CDS express proteins.
-    '''
-    def __init__(self, world_graph, miner):
-        super().__init__(world_graph, miner)
-    
-    def enhance(self):
-        graph = self._wg.truth
-        for cds in graph.get_cds():
-            for i in graph.interactions.get(object=cds):
-                if i.n.get_type() == str(nv_pp):
-                    break
-            else:
-                n = self._add_related_node(graph,cds,nv_pp)
-                v = self._add_related_node(graph,cds,nv_p)
-                self._wg.truth.interactions.positive(n,cds,nv_template,100)
-                self._wg.truth.interactions.positive(n,v,nv_product,100)
 
 
 

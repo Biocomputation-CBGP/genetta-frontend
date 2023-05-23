@@ -74,10 +74,13 @@ background_color_o = {"graph": Output("content", "style"),
 label_color_i = Input('label-picker', 'value')
 label_color_o = Output(graph_id, "stylesheet")
 
-cypher_i = {"submit": Input("submit_cypher", "n_clicks")}
+cypher_au_i = Input(graph_id, "style")
+cypher_au_o = {"query": Output("query", "value"),
+               "submit":Output("submit_cypher", "n_clicks")}
+cypher_i = {"submit": Input(cypher_au_o["submit"].component_id, "n_clicks")}
 cypher_o = {"graph_id": Output("graph_content", "children"),
             "datatable_id": Output("datatable", "children")}
-cypher_s = State("query", "value")
+cypher_s = State(cypher_au_o["query"].component_id, "value")
 
 
 project_load_i = Input("project_load_i", "value")

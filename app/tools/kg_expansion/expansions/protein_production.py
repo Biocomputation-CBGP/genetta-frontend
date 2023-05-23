@@ -15,7 +15,7 @@ class TruthProteinProduction(AbstractExpansion):
     def __init__(self, truth_graph, miner):
         super().__init__(truth_graph, miner)
     
-    def enhance(self):
+    def expand(self):
         i_graph = self._tg.interactions.get()
         for cds in self._tg.get_cds():
             for i in i_graph.interactions(entity=cds):

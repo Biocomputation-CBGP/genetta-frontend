@@ -1,8 +1,8 @@
 import re
 from abc import ABC
 from app.graph.utility.model.model import model
-from app.graph.utility.graph_objects.edge import Edge
-from app.graph.utility.graph_objects.node import Node
+from app.graph.utility.graph_objects.reserved_edge import ReservedEdge
+from app.graph.utility.graph_objects.reserved_node import ReservedNode
 from app.graph.truth_graph.modules.viewgraph import ViewGraph
 import networkx as nx
 confidence = str(model.identifiers.external.confidence)
@@ -43,17 +43,15 @@ class AbstractModule(ABC):
     def upper_threshold(self):
         pass
     
-    def _cast_edge(self,n,v,e):
+    def _cast_edge(self,n,v,e,**kwargs):
         n = self._cast_node(n)
         v = self._cast_node(v)
-        edge = Edge(n,v,e)
-        edge.properties["graph_name"] = self._tg.name
-        edge.graph_name = self._tg.name
+        edge = ReservedEdge(n,v,e,graph_name=self._tg.name,**kwargs)
         return edge
         
-    def _cast_node(self,subject):
-        if not isinstance(subject,Node):
-            subject = Node(subject)
+    def _cast_node(self,subject,n_type=None):
+        if not isinstance(subject,ReservedNode):
+            subject = ReservedNode(subject,n_type,graph_name=self._tg.name)
         subject.properties["graph_name"] = self._tg.name
         subject.graph_name = self._tg.name
         return subject
@@ -62,7 +60,7 @@ class AbstractModule(ABC):
         if not isinstance(edges,(list,set,tuple)):
             edges = [edges]
         for edge in edges:
-            if not isinstance(edge,Edge):
+            if not isinstance(edge,ReservedEdge):
                 raise ValueError(f'{edge} must be an edge.')
             eq = self._tg.edge_query(e=edge)
             if eq != []:

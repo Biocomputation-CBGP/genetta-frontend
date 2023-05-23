@@ -8,6 +8,11 @@ from app.graph.utility.graph_objects.node import Node
 from app.graph.utility.graph_objects.edge import Edge
 p_confidence = str(model.identifiers.external.confidence)
 p_synonym = str(model.identifiers.external.synonym)
+o_pe = model.identifiers.objects.physical_entity
+index_name = "truth_index"
+index_labels = ([model.identifiers.objects.synonym] + 
+                [str(k[1]["key"]) for k in model.get_derived(o_pe)])
+index_on = ["name",model.identifiers.external.description] 
 
 class TruthGraph(DesignGraph):
     def __init__(self, name, driver):
@@ -16,10 +21,7 @@ class TruthGraph(DesignGraph):
         self.interactions = InteractionModule(self)
         self.derivatives = DerivativeModule(self)
         self._np = {"graph_name": self.name}
-
-
-    def query(self):
-        raise NotImplementedError()
+        self._create_text_index(index_name,index_labels,index_on)
     
     def add_node(self,key,type=None,**kwargs):
         kwargs.update(self._np)
@@ -63,6 +65,21 @@ class TruthGraph(DesignGraph):
         return [e for e in self._edge_query(n,e,v,**kwargs) 
                 if int(e[p_confidence]) >= threshold]
 
+    def _create_text_index(self,name,labels,on):
+        if "graph_name" not in on:
+            on.append("graph_name")
+        return self.driver.create_text_index(name,labels,on)
+
+    def query_text_index(self,values,predicate=None,
+                         wildcard=False,fuzzy=False):
+        if predicate is None:
+            predicate = "OR"
+        return self.driver.query_text_index(index_name,values,
+                                            graph_names=self.name,
+                                            predicate=predicate,
+                                            wildcard=wildcard,
+                                            fuzzy=fuzzy)
+
     def drop(self):
         self.driver.drop_graph(self.name)
 
@@ -77,9 +94,7 @@ class TruthGraph(DesignGraph):
             return Node(k, t, id=iden, **props)
         data = []
         with open(fn) as f:
-            # Weirdness its always 1 line.
-            for line in f:
-                data = json.loads(line)
+            data = json.load(f)
         for d in data:
             if d["type"] == "relationship":
                 n = _node(d["start"])
