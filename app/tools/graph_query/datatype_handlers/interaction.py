@@ -50,8 +50,4 @@ class InteractionHandler(AbstractHandler):
 
     def feedback(self, source, result, positive=True):
         print(source,result)
-        '''
-        Source = Genetic Part
-        Result = Interaction
-        '''
-        pass
+        
