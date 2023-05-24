@@ -26,7 +26,7 @@ class TruthGraphBuilder:
             seeder = Seeder(self._graph,self._miner)
             seeder.enable_all()
             seeder.build()
-            self._graph.truth.save(tg_initial_fn)
+            self._graph.save(tg_initial_fn)
     
     def expand(self):
         for mod in self._modules:
