@@ -138,10 +138,17 @@ class QueryBuilder:
         return 'SHOW FULLTEXT INDEXES'
     
     def query_text_index(self,index_name,values,graph_names=None,
-                         predicate=None,wildcard=False,fuzzy=False):
+                         predicate=None,wildcard=False,fuzzy=False,
+                         threshold=None):
         qry_str  = ""
         if predicate is None:
             predicate = "OR"
+        if fuzzy:
+            fuzzy_s = "~"
+            if threshold is not None:
+                fuzzy_s += str(threshold)
+        else:
+            fuzzy_s = ""
         if graph_names is not None:
             graph_names = self._escape_sequence(str(graph_names))
             qry_str +=  f'graph_name:{graph_names} AND '
@@ -149,15 +156,15 @@ class QueryBuilder:
             if not isinstance(v,list):
                 v = [v]
             if is_url(k):
-                k = f'`{self._escape_sequence(k)}`'
+                k = self._escape_sequence(k)
             if index == 0:
                 qry_str += "("
             for index2,ele in enumerate(v):
                 if is_url(ele):
                     ele = f'`{ele}`'
                 if wildcard:
-                    qry_str += f'{k}:*{ele}{"~" if fuzzy else ""} OR '
-                qry_str += f'{k}:{ele}{"~" if fuzzy else ""}'
+                    qry_str += f'{k}:*{ele}{fuzzy_s} OR '
+                qry_str += f'{k}:{ele}{fuzzy_s}'
                 if index2 < len(v)-1:
                     qry_str += f' {predicate} '
             if index < len(values)-1:
@@ -203,10 +210,11 @@ class QueryBuilder:
         RETURN p
         """
 
-    def merge_relationship_nodes(self,edge):
+    def merge_relationship_nodes(self,source,merged):
         return f'''
-        {self._edge_match(n=edge.n,v=edge.v,e=edge.get_type(),e_props=edge.get_properties())}
-        CALL apoc.refactor.mergeNodes([n,v],{{properties:"combine",
+        MATCH (source:`{source}`)
+        MATCH (merged: `{merged}`)
+        CALL apoc.refactor.mergeNodes([source,merged],{{properties:"combine",
                                                         mergeRels:TRUE,
                                                         produceSelfRel:FALSE,
                                                         preserveExistingSelfRels:FALSE}})

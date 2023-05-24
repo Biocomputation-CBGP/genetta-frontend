@@ -99,7 +99,7 @@ class AbstractDatabase(ABC):
         properties = ([(nv_characteristic, physical_entity)] +
                     [(nv_role, r) for r in (s_graph.get_roles(cd) + cd_types)])
         s, p, o = map_to_nv(cd, properties, m_roots, model)
-        sequence = s_graph.get_sequence_names(cd)
+        sequence = s_graph.get_sequences(cd)
         if len(sequence) > 0:
             assert(len(sequence) == 1)
             props = {model.identifiers.predicates.hasSequence: sequence[0]}

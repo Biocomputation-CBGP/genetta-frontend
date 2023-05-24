@@ -49,5 +49,10 @@ class InteractionHandler(AbstractHandler):
         return results
 
     def feedback(self, source, result, positive=True):
-        print(source,result)
-        
+        graph = self._graph.interactions.get(result)
+        # We assume source is already an edge.
+        for e in graph.edges():
+            if positive:
+                self._graph.interactions.positive(e.n,e.v,e.get_type())
+            else:
+                self._graph.interactions.negative(e.n,e.v,e.get_type())

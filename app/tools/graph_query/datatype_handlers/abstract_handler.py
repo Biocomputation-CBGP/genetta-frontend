@@ -29,9 +29,9 @@ class AbstractHandler(ABC):
     def feedback(self, source, result, positive=True):
         pass
 
-    def _identify_entities(self,qry_elements,viewgraph=None,
-                           index=None,predicate=None):
-        entities = []
+    def _identify_entities(self,qry_elements,viewgraph=None,index=None,
+                           predicate=None,threshold=None):
+        entities = {}
         if not isinstance(qry_elements,list):
             qry_elements = [qry_elements]
         qry_strs = []
@@ -39,10 +39,9 @@ class AbstractHandler(ABC):
             if self.is_url(qry_str):
                 continue
             qry_strs.append(qry_str)
-            split = re.split("[-_]", qry_str)
+            split = [e for e in re.split("[-_]", qry_str) if e != ""]
             if len(split) > 1:
                 qry_strs += split
-
 
         qry_uris = [q for q in qry_elements if self.is_url(q)]
         if len(qry_strs) > 0:
@@ -52,21 +51,19 @@ class AbstractHandler(ABC):
                 if not isinstance(index,list):
                     index = [index]
                 index = {ti:qry_strs for ti in index}
-            # Note, we dont consider the index score in any decision making
-            # The scores seem to be relative to the input, may need 
-            # to exlore further to use.
-            qti = list(self._graph.query_text_index(index,
-                                                    predicate=predicate,
-                                                    fuzzy=True,
-                                                    wildcard=True))
-            entities += qti
+            qti = self._graph.query_text_index(index,
+                                               predicate=predicate,
+                                               fuzzy=True,
+                                               threshold=threshold)
+            entities.update(qti)
         for qry_uri in qry_uris:
             if viewgraph is not None:
                 entity = viewgraph.get_node(qry_uri)
                 if entity is not None:
-                    entities.append(entity)
+                    entities[entity] = 100
             else:
-                entities += self._graph.node_query(qry_uri)
+                es = {i:100 for i in self._graph.node_query(qry_uri)}
+                entities.update(es)
         return entities
     
     def _merge_duplicates(self,list1,list2):

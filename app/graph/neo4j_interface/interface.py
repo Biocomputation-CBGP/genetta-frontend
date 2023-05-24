@@ -173,8 +173,8 @@ class Neo4jInterface:
         self.qry_builder.add_match_node(node)
         self.qry_builder.add_add_node_label(node, label)
 
-    def merge_nodes(self, edge):
-        qry = self.qry_builder.merge_relationship_nodes(edge)
+    def merge_nodes(self,source,merged):
+        qry = self.qry_builder.merge_relationship_nodes(source,merged)
         res = self.run_query(qry)
         assert (len(res) == 1)
         return list(res[0].values())[0]
@@ -228,13 +228,14 @@ class Neo4jInterface:
         return self._run(qry)
 
     def query_text_index(self, index_name, values, graph_names=None,
-                         predicate=None, wildcard=False, fuzzy=False):
+                         predicate=None, wildcard=False, fuzzy=False,
+                         threshold=None):
         qry = self.qry_builder.query_text_index(index_name, values,
                                                 graph_names=graph_names,
                                                 predicate=predicate,
                                                 wildcard=wildcard,
-                                                fuzzy=fuzzy)
-        print(qry)
+                                                fuzzy=fuzzy,
+                                                threshold=threshold)
         df = self._run(qry)
         results = {}
         for row in df.iterrows():
@@ -243,7 +244,9 @@ class Neo4jInterface:
             score = row["score"]
             key, r_type = self.derive_key_type(node.labels)
             props = self._go_dict(node)
-            results[self._node(key, r_type, props)] = score
+            score = int(score)*10
+            assert(score <= 100)
+            results[self._node(key, r_type, props)] = score 
         return results
 
     def drop_graph(self, graph_name):

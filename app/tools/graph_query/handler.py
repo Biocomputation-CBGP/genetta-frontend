@@ -2,13 +2,15 @@ from app.tools.graph_query.datatype_handlers.canonical import CanonicalHandler
 from app.tools.graph_query.datatype_handlers.derivative import DerivativeHandler
 from app.tools.graph_query.datatype_handlers.interaction import InteractionHandler
 from app.tools.graph_query.datatype_handlers.metadata import MetadataHandler
+from app.tools.graph_query.datatype_handlers.sequence import SequenceHandler
 class GraphQueryHandler:
     def __init__(self,graph):
         self._graph = graph
         self._handlers = [CanonicalHandler(graph),
                         DerivativeHandler(graph),
                         InteractionHandler(graph),
-                        MetadataHandler(graph)]
+                        MetadataHandler(graph),
+                        SequenceHandler(graph)]
 
     def get_handlers(self):
         return self._handlers

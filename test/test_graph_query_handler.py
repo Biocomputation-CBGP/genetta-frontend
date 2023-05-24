@@ -246,7 +246,6 @@ class TestGraphQueryHandlerDerivative(unittest.TestCase):
         self._handlers.feedback("Derivative",inp_source,inp_res)
         post_graph = self._tg.derivatives.get(inp_res,threshold=0)
         post_edges = list(post_graph.derivatives())
-        print(len(pre_edges),len(post_edges))
         diff = list(set(post_edges) - set(pre_edges))
         self.assertEqual(len(diff), 1)
         self.assertEqual(diff[0],e_n_e)
@@ -331,57 +330,29 @@ class TestGraphQueryHandlerInteraction(unittest.TestCase):
                 self.assertIn(entity,[r[1]["entity"] for r in res[subj]])
 
 
-    def test_feedback(self):
+    def test_feedback_existing(self):
         inp_source = "https://synbiohub.programmingbiology.org/public/Cello_Parts/IcaRA/1" 
         inp_res = "https://synbiohub.programmingbiology.org/public/Cello_Parts/IcaRA_protein_production/IcaRA_protein_interaction/1"
         e_n_n1 = ReservedNode(inp_res,o_cds,graph_name=self._tg.name)
         e_n_n2 = ReservedNode(inp_source,o_gp,graph_name=self._tg.name)
-        e_n_e = ReservedEdge(e_n_n1,e_n_n2,p_template,graph_name=self._tg.name)
-        pre_graph = self._tg.synonyms.get(inp_res)
-        pre_edges = list(pre_graph.synonyms())
+        pre_graph = self._tg.interactions.get(inp_res)
+        pre_edges = list(pre_graph.interactions())
         try:
             pre_conf = [e.confidence for e in pre_edges if e.v.get_key() == inp_source][0]
         except IndexError:
             pre_conf = 0
 
         self._handlers.feedback("Interaction",inp_source,inp_res)
-        post_graph = self._tg.synonyms.get(inp_res)
-        post_edges = list(post_graph.synonyms(),)
+        post_graph = self._tg.interactions.get(inp_res)
+        post_edges = list(post_graph.interactions(),)
         diff = list(set(post_edges) - set(pre_edges))
-        self.assertEqual(len(diff), 1)
-        self.assertEqual(diff[0],e_n_e)
         for e in post_edges:
             if e.v.get_key() == inp_source:
-                self.assertEqual(e.confidence,pre_conf + self._tg.synonyms._standard_modifier)
+                self.assertEqual(e.confidence,pre_conf + self._tg.interactions._standard_modifier)
 
         self._handlers.feedback("Interaction",inp_source,inp_res,positive=False)
-        post_graph = self._tg.synonyms.get(inp_res)
-        post_edges = list(post_graph.synonyms())
-        diff = list(set(post_edges) - set(pre_edges))
-        self.assertTrue(len(diff) == 0)
-        for e in post_edges:
-            if e.v.get_key() == inp_source:
-                self.assertEqual(e.confidence,pre_conf)
-
-    def test_feedback_uri(self):
-        inp_source = "https://synbiohub.org/public/igem/BBa_I753000/1" 
-        inp_res = "https://synbiohub.org/public/igem/BBa_Z52934/1"
-        pre_graph = self._tg.synonyms.get(inp_res)
-        pre_edges = list(pre_graph.synonyms())
-        pre_conf = [e.confidence for e in pre_edges if e.v.get_key() == inp_source][0]
-
-        self._handlers.feedback("Canonical",inp_source,inp_res,positive=False)
-        post_graph = self._tg.synonyms.get(inp_res)
-        post_edges = list(post_graph.synonyms())
-        diff = list(set(post_edges) - set(pre_edges))
-        self.assertTrue(len(diff) == 0)
-        for e in post_edges:
-            if e.v.get_key() == inp_source:
-                self.assertEqual(e.confidence,pre_conf - self._tg.synonyms._standard_modifier)
-
-        self._handlers.feedback("Canonical",inp_source,inp_res)
-        post_graph = self._tg.synonyms.get(inp_res)
-        post_edges = list(post_graph.synonyms())
+        post_graph = self._tg.interactions.get(inp_res)
+        post_edges = list(post_graph.interactions())
         diff = list(set(post_edges) - set(pre_edges))
         self.assertTrue(len(diff) == 0)
         for e in post_edges:
@@ -396,18 +367,15 @@ class TestGraphQueryHandlerMetadata(unittest.TestCase):
         self._tg = self._wg.truth
 
     def test_query_single(self):
-        # Need to look into this further...
         qry_str = "LacI- wild type"
-        expected_result = [(99, 'https://synbiohub.org/public/igem/BBa_J31007/1'), 
-                           (97, 'https://synbiohub.org/public/igem/BBa_K315021/1'), 
-                           (96, 'https://synbiohub.org/public/igem/BBa_K137052/1'), 
-                           (96, 'https://synbiohub.org/public/igem/BBa_K315015/1'), 
-                           (95, 'https://synbiohub.org/public/igem/BBa_K315040/1'), 
-                           (83, 'https://synbiohub.org/public/igem/BBa_K137100/1')]
+        expected_result = "https://synbiohub.org/public/igem/BBa_K091122/1"
         res = self._handlers.query("Metadata",qry_str)
-        self.assertEqual(len(res),1)
-        self.assertIn(qry_str,res)
-        self.assertCountEqual(res[qry_str],expected_result)
+        for k,v in res.items():
+            for e in v:
+                if e[1]["entity"] == expected_result:
+                    break
+            else:
+                self.fail()
 
 class TestGraphQueryHandlerSequence(unittest.TestCase):
     @classmethod
@@ -416,5 +384,5 @@ class TestGraphQueryHandlerSequence(unittest.TestCase):
         self._handlers = GraphQueryHandler(self._wg.truth)
         self._tg = self._wg.truth
 
-    def test_query_uri(self):
-        pass
+    def test_query_seq(self):
+        self._handlers.query("Sequence","ATCG")

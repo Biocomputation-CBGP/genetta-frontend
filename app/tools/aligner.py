@@ -13,3 +13,6 @@ class Aligner:
         seq1 = Seq(seq1.lower())
         seq2 = Seq(seq2.lower())
         return self._aligner.score(seq2,seq1)/len(max([seq2,seq1], key=len))
+
+
+aligner = Aligner()

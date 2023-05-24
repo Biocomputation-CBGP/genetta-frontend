@@ -1,4 +1,6 @@
 from app.tools.graph_query.datatype_handlers.abstract_handler import AbstractHandler
+from app.graph.utility.model.model import model
+
 class SequenceHandler(AbstractHandler):
     def __init__(self,graph):
         super().__init__(graph)
@@ -10,16 +12,14 @@ class SequenceHandler(AbstractHandler):
         return "Returns genetic parts based on sequence matching."
     
     def get_example(self):
-        return ""
+        return "tttaattatatatatatatatatataatggaagcgtttt"
     
     def handle(self,query):
-        '''
-        The sequence data is stored as a URI. This introduces an issue at scale.
-        I really can't think of a good way of doing this...
-        You could try a custom sparql query to return the sequence only.
-        However, even this is a limited solution.
-        '''
-        pass
-
+        query = query.replace(" ","")
+        for entity in self._graph.sequence_query(query):
+            pass
+        
+        return results
+    
     def feedback(self, source, result, positive=True):
         pass

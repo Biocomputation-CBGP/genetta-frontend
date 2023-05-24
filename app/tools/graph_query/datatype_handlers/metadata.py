@@ -16,20 +16,17 @@ class MetadataHandler(AbstractHandler):
         return "Repression"
     
     def handle(self,query):
-        '''
-        Questions posed with metadata searches.
-        1. Do we take into account individual words or partial or full queries.
-            1.1. For example, [Laci,Repression,plac] OR ["Laci represses pLac"]
-            1.2. I think with a metadata search, a match must be within all words with removed stopwords.
-        2. Do synonyms ever carry there own metadata or is the canonical entity the holder?
-        3. Descriptions are captured in lists. I think there is an issue where the indexing isn't working properly.
-           Try figure out if there is a special case for lists.
-        4. How would the feedback even work for metadata? Perhaps it just doesnt.
-         '''
         results = {}
         qry_eles = self._miner.get_entities(query)
-        results[None] = self._identify_entities(qry_eles,index=p_description,
-                                                       predicate="AND")
+        e_res = []
+        entities = self._identify_entities(qry_eles,index=p_description,
+                                           predicate="AND",threshold=1)
+        for entity,score in entities.items():
+            d = f'{entity.name} - {self._get_name(entity.get_type())}'
+            e_res.append((score, 
+                         {"description" : d, 
+                          "entity" : entity.get_key()}))
+            results[None] = e_res
         return results
 
 

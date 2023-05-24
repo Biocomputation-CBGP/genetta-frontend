@@ -9,6 +9,7 @@ from app.graph.utility.graph_objects.edge import Edge
 p_confidence = str(model.identifiers.external.confidence)
 p_synonym = str(model.identifiers.external.synonym)
 o_pe = model.identifiers.objects.physical_entity
+p_has_sequence = str(model.identifiers.predicates.has_sequence)
 index_name = "truth_index"
 index_labels = ([model.identifiers.objects.synonym] + 
                 [str(k[1]["key"]) for k in model.get_derived(o_pe)])
@@ -56,6 +57,10 @@ class TruthGraph(DesignGraph):
         self.driver.set_edge(edge, {p_confidence: confidence})
         return self.driver.submit()
 
+    def merge_nodes(self,source,merged):
+        self.driver.merge_node(source,merged)
+        return self.driver.submit()
+
     def node_query(self, n=[], **kwargs):
         return self._node_query(n,**kwargs)
 
@@ -65,21 +70,37 @@ class TruthGraph(DesignGraph):
         return [e for e in self._edge_query(n,e,v,**kwargs) 
                 if int(e[p_confidence]) >= threshold]
 
-    def _create_text_index(self,name,labels,on):
-        if "graph_name" not in on:
-            on.append("graph_name")
-        return self.driver.create_text_index(name,labels,on)
-
-    def query_text_index(self,values,predicate=None,
-                         wildcard=False,fuzzy=False):
+    def query_text_index(self,values,predicate=None,wildcard=False,
+                         fuzzy=False,threshold=None):
         if predicate is None:
             predicate = "OR"
         return self.driver.query_text_index(index_name,values,
                                             graph_names=self.name,
                                             predicate=predicate,
                                             wildcard=wildcard,
-                                            fuzzy=fuzzy)
+                                            fuzzy=fuzzy,
+                                            threshold=threshold)
 
+    def sequence_query(self,sequence,threshold=None):
+        '''
+        Currently assumes all entities contain actual sequence data.
+        '''
+        results = {}
+        if threshold is None:
+            threshold = 0
+        f_match = self._graph.node_query(**{p_has_sequence:sequence})
+        if len(f_match) != 0:
+            assert(len(f_match) == 1)
+            results[f_match[0]] = 100
+            # Could put in recurisive loop.
+            for derivative in self.derivatives.get(f_match[0]):
+                if derivative.confidence > threshold:
+                    results[derivative.v] = derivative.confidence
+        else:
+            # Either node index OR Iterate over sequences and match locally.
+            pass
+        return results
+    
     def drop(self):
         self.driver.drop_graph(self.name)
 
@@ -122,6 +143,11 @@ class TruthGraph(DesignGraph):
             json.dump(data, outfile)
         return out_fn
 
+    def _create_text_index(self,name,labels,on):
+        if "graph_name" not in on:
+            on.append("graph_name")
+        return self.driver.create_text_index(name,labels,on)
+    
     def _add_edge_gn(self, edge):
         gnd = self._np
         edge.n.update(gnd)

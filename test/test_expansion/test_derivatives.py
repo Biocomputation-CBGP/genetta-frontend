@@ -36,7 +36,7 @@ class TestDerivativeExpansion(unittest.TestCase):
         pass
     
     def test_derivative_expansion(self):
-        ppe = TruthDerivative(self.wg,data_miner)
+        ppe = TruthDerivative(self.tg,data_miner)
         pre_e = self.tg.edges()
         ppe.enhance()
         post_e = self.tg.edges()
