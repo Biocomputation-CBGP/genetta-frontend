@@ -43,6 +43,16 @@ class ViewGraph:
     def __iadd__(self,viewgraph):
         return self.__class__(nx.compose(self._graph,viewgraph._graph))
         
+    def _find_node(self,n):
+        if isinstance(n,ReservedNode):
+            return n.id
+        elif n in self.nodes():
+            return n
+        else:
+            for node in self.nodes():
+                if node.get_key() == n:
+                    return node.id
+                
     def _node(self,labels,id=None,properties=None):
         if properties is None:
             props = {}
@@ -56,6 +66,7 @@ class ViewGraph:
         else:
             props = properties
         return ReservedEdge(n,v,e,**props)
+
 
     def derivatives(self,node=None):
         o_edges = list(self.out_edges(node))
@@ -202,4 +213,14 @@ class ViewGraph:
 
     def remove_node(self, node):
         self._graph.remove_node(node)
+    
+    def has_path(self,source,dest):
+        source = self._find_node(source)
+        dest = self._find_node(dest)
+        try:
+            return nx.has_path(self._graph, source, dest)
+        except nx.exception.NodeNotFound:
+            return False
         
+    def weakly_connected_components(self):
+        return nx.weakly_connected_components(self._graph)

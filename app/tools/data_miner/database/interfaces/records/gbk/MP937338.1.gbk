@@ -1,0 +1,23 @@
+LOCUS       MP937338                  49 bp    DNA     linear   PAT 17-MAR-2021
+DEFINITION  Sequence 267 from Patent WO2021038213.
+ACCESSION   MP937338
+VERSION     MP937338.1
+KEYWORDS    .
+SOURCE      synthetic construct
+  ORGANISM  synthetic construct
+            other sequences; artificial sequences.
+REFERENCE   1
+  AUTHORS   WANG,B. and LIU,Y.
+  TITLE     ENGINEERED CRISPRA
+  JOURNAL   Patent: WO 2021038213-A1 267 04-MAR-2021;
+            UNIV COURT UNIV OF EDINBURGH [GB]
+FEATURES             Location/Qualifiers
+     source          1..49
+                     /organism="synthetic construct"
+                     /mol_type="other DNA"
+                     /db_xref="taxon:32630"
+                     /note="Terminator L3S3P22"
+ORIGIN      
+        1 ccaattattg aaggccgcta acgcggcctt tttttgtttc tggtctccc
+//
+

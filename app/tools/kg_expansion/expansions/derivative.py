@@ -18,7 +18,7 @@ class TruthDerivative(AbstractExpansion):
         i_graph = self._tg.interactions.get()
         d_graph = self._tg.derivatives.get()
         for der in d_graph.derivatives():
-            for i in i_graph.interactions(entity=der.n):
+            for i in i_graph.interactions(participant=der.n):
                 considered = [der.n]
                 ie = list(i_graph.interaction_elements(i))
                 d_ders = [der]
@@ -27,7 +27,7 @@ class TruthDerivative(AbstractExpansion):
                     if d_der.v in considered:
                         continue
                     considered.append(d_der.v)
-                    for d_i in i_graph.interactions(entity=d_der.v):
+                    for d_i in i_graph.interactions(participant=d_der.v):
                         d_i_eles = list(i_graph.interaction_elements(d_i))
                         if d_i.get_type() != i.get_type():
                             continue

@@ -102,7 +102,7 @@ class AbstractDatabase(ABC):
         sequence = s_graph.get_sequences(cd)
         if len(sequence) > 0:
             assert(len(sequence) == 1)
-            props = {model.identifiers.predicates.hasSequence: sequence[0]}
+            props = {model.identifiers.predicates.hasSequence: sequence[0].upper()}
         else:
             props = None
         n = self._add_node(s_graph,s, o, props)

@@ -3,6 +3,7 @@ from abc import ABC
 from app.graph.utility.model.model import model
 from app.graph.utility.graph_objects.reserved_edge import ReservedEdge
 from app.graph.utility.graph_objects.reserved_node import ReservedNode
+from app.graph.utility.graph_objects.node import Node
 from app.graph.truth_graph.modules.viewgraph import ViewGraph
 import networkx as nx
 confidence = str(model.identifiers.external.confidence)
@@ -14,6 +15,7 @@ class AbstractModule(ABC):
         self._standard_modifier = 5
         self._upper_threshold = 100
         self._lower_threshold = 0
+        self._default_threshold=80
     
 
     def _to_graph(self,edges):
@@ -51,6 +53,9 @@ class AbstractModule(ABC):
         
     def _cast_node(self,subject,n_type=None):
         if not isinstance(subject,ReservedNode):
+            if isinstance(subject,Node):
+                n_type = subject.get_type()
+                subject = subject.get_key()
             subject = ReservedNode(subject,n_type,graph_name=self._tg.name)
         subject.properties["graph_name"] = self._tg.name
         subject.graph_name = self._tg.name

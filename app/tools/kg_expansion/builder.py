@@ -9,24 +9,27 @@ class TruthGraphBuilder:
     def __init__(self,graph):
         self._graph = graph
         self._miner = data_miner
-        self._modules = [TruthDerivative(self._graph,self._miner),
-                         TruthProteinProduction(self._graph,self._miner)]
+        self._modules = [TruthDerivative(self._graph.truth,
+                                         self._miner),
+                         TruthProteinProduction(self._graph.truth,
+                                                self._miner)]
     
     def seed(self):
         '''
-        Keep it seperate because it should only need to be loaded once ever.
+        Keep it seperate because it should only need 
+        to be loaded once ever.
         '''
         from app.tools.kg_expansion.seeder.seeder import Seeder
         if os.path.isfile(tg_initial_fn):
             print("Truth Graph present, building from file.")
-            self._graph.drop()
-            self._graph.load(tg_initial_fn)
+            self._graph.truth.drop()
+            self._graph.truth.load(tg_initial_fn)
         else:
-            self._graph.drop()
-            seeder = Seeder(self._graph,self._miner)
+            self._graph.truth.drop()
+            seeder = Seeder(self._graph.truth,self._miner)
             seeder.enable_all()
             seeder.build()
-            self._graph.save(tg_initial_fn)
+            self._graph.truth.save(tg_initial_fn)
     
     def expand(self):
         for mod in self._modules:

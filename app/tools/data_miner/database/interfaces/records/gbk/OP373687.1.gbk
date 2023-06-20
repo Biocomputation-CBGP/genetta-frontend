@@ -1,0 +1,59 @@
+LOCUS       OP373687                 720 bp    DNA     linear   SYN 23-NOV-2022
+DEFINITION  Synthetic construct monomeric hyperfolder YFP (mhYFP) gene,
+            complete cds.
+ACCESSION   OP373687
+VERSION     OP373687.1
+KEYWORDS    .
+SOURCE      synthetic construct
+  ORGANISM  synthetic construct
+            other sequences; artificial sequences.
+REFERENCE   1  (bases 1 to 720)
+  AUTHORS   Campbell,B.C., Paez-Segala,M.G., Looger,L.L., Petsko,G.A. and
+            Liu,C.F.
+  TITLE     Chemically stable fluorescent proteins for advanced microscopy
+  JOURNAL   Nat Methods (2022) In press
+   PUBMED   36344833
+  REMARK    Publication Status: Available-Online prior to print
+REFERENCE   2  (bases 1 to 720)
+  AUTHORS   Campbell,B.C.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (03-SEP-2022) Brain and Mind Research Institute, Weill
+            Cornell Medicine, 413 E 69th St, New York, NY 10021, USA
+FEATURES             Location/Qualifiers
+     source          1..720
+                     /organism="synthetic construct"
+                     /mol_type="other DNA"
+                     /db_xref="taxon:32630"
+     gene            1..720
+                     /gene="mhYFP"
+     CDS             1..720
+                     /gene="mhYFP"
+                     /note="yellow fluorescent protein engineered for high
+                     chemical and thermal stability. It can withstand 6 M
+                     guanidinium hydrochloride (GdnHCl) and other chaotropic
+                     reagents for extended periods of time; this is a monomeric
+                     variant of hfYFP"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="monomeric hyperfolder YFP"
+                     /protein_id="UZP65124.1"
+                     /translation="MVSKGEELFTGVVPILVELDGDVNGHKFSVRGEGEGDATNGKLT
+                     LKLISTTGKLPVPWPTLVTTLGYGLMVFARYPDHMKQHDFFKSAMPEGYVQERTISFE
+                     DDGYYKTRAEVKFEGDTLVNRIVLKGIDFKEDGNILGHKLEYNFNPHNVYITADKQKN
+                     GIKANFKIRHNVEDGGVQLADHYQQNTPIGDGPVLMPDNHYLSYQSKLSKDPNEKRDH
+                     MVLKERVTAAGITHDMNELYK"
+ORIGIN      
+        1 atggtgagca agggcgagga gctgttcacc ggggtggtgc ccatcctggt cgagctggac
+       61 ggcgacgtaa acggccacaa gttcagcgtc cgcggcgagg gcgagggcga tgccaccaac
+      121 ggcaagctga ccctgaagct catctccacc accggcaagc tgcccgtgcc ctggcccacc
+      181 ctcgtgacca ccttaggcta cggcctgatg gtgttcgccc gctaccccga ccacatgaag
+      241 cagcacgact tcttcaagtc cgccatgccc gaaggctacg tccaggagcg caccatctct
+      301 ttcgaggacg acggttacta caagacccgc gccgaggtga agttcgaggg cgacaccctg
+      361 gtgaaccgca tcgtgctgaa gggcatcgac ttcaaggagg acggcaacat cctggggcac
+      421 aagctggagt acaacttcaa cccccacaac gtctatatca cggccgacaa gcagaagaac
+      481 ggcatcaagg ctaacttcaa gatccgccac aacgttgagg acggcggcgt gcagctcgcc
+      541 gaccactacc agcagaacac ccccatcggc gacggccccg tgctgatgcc cgacaaccac
+      601 tacctgagct accagtccaa gctgagcaaa gaccccaacg agaagcgcga tcacatggtc
+      661 ctgaaggaga gggtgaccgc cgccgggatt acacatgaca tgaacgagct gtacaagtaa
+//
+

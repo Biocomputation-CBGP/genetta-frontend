@@ -85,6 +85,7 @@ class Neo4jInterface:
                 if new_props == {} or list(new_props.keys()) == ["name"]:
                     continue
                 self.qry_builder.add_match_node(q_node)
+                print(n.properties)
                 self.qry_builder.add_set_node(n, new_props)
                 return n
         else:
@@ -142,6 +143,10 @@ class Neo4jInterface:
         self.qry_builder.add_match_node(node, use_id)
         self.qry_builder.add_remove_node(node)
 
+    def duplicate_node(self,old,new,graph_name):
+        qry = self.qry_builder.duplicate_node(old,new,graph_name)
+        return self._run(qry)
+
     def replace_node_label(self, old_label, new_label, new_props=None, **kwargs):
         n = Node(old_label, **kwargs)
         self.qry_builder.add_match_node(n)
@@ -149,21 +154,14 @@ class Neo4jInterface:
             self.qry_builder.add_set_node(n, new_props)
         self.qry_builder.add_replace_node_label(n, old_label, new_label)
 
-    def replace_edge_label(self, old_label, new_label, new_props=None, **kwargs):
-        n = Node(old_label, **kwargs)
-        self.qry_builder.add_match_node(n)
-        if new_props is not None:
-            self.qry_builder.add_set_node(n, new_props)
-        self.qry_builder.add_replace_node_label(n, old_label, new_label)
-
-    def replace_edge_property(self, n, v, e, props, new_properties):
-        edge = self._edge(n, v, e, props)
+    def replace_edge_property(self,edge,new_properties):
+        edge = self._edge(edge.n, edge.v, edge.get_type(), edge.properties)
         self.qry_builder.add_match_edge(edge)
-        self.qry_builder.add_set_edge(edge, new_properties)
+        self.qry_builder.add_replace_edge_properties(edge, new_properties)
 
     def replace_node_property(self, node, new_properties):
         self.qry_builder.add_match_node(node)
-        self.qry_builder.add_set_node(node, new_properties)
+        self.qry_builder.add_replace_node_properties(node, new_properties)
 
     def set_edge(self, edge, new_properties):
         self.qry_builder.add_match_edge(edge)
@@ -173,11 +171,10 @@ class Neo4jInterface:
         self.qry_builder.add_match_node(node)
         self.qry_builder.add_add_node_label(node, label)
 
-    def merge_nodes(self,source,merged):
-        qry = self.qry_builder.merge_relationship_nodes(source,merged)
-        res = self.run_query(qry)
-        assert (len(res) == 1)
-        return list(res[0].values())[0]
+    def merge_nodes(self,source,merged,properties=None):
+        qry = self.qry_builder.merge_nodes(source,merged,
+                                           properties=properties)
+        return self.run_query(qry)
 
     def remove_graph(self, graph_name):
         if not isinstance(graph_name, list):
@@ -402,6 +399,7 @@ class Neo4jInterface:
             n = self.qry_builder.nodes[n].graph_object
             if n.type == "None":
                 n.type = on.type
+            n.update(properties)
         return n
 
     def _edge(self, n, v, e, properties):

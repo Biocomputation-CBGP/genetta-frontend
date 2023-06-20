@@ -6,6 +6,7 @@ class AbstractExpansion(ABC):
     def __init__(self,truth_graph,miner):
         self._tg = truth_graph
         self._miner = miner
+        self._match_threshold = 80
     
     @abstractmethod
     def expand(self):
@@ -25,7 +26,7 @@ class AbstractExpansion(ABC):
             return subject[:-2]
         else:
             return subject
-
+    
     def _get_name(self,subject):
         split_subject = self._split(subject)
         if len(split_subject[-1]) == 1 and split_subject[-1].isdigit():

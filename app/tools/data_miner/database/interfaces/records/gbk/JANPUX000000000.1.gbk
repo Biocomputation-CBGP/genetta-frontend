@@ -1,0 +1,84 @@
+LOCUS       JANPUX010000000          146 rc    DNA     linear   BCT 09-JUN-2023
+DEFINITION  Enterobacter hormaechei strain COV_691, whole genome shotgun
+            sequencing project.
+ACCESSION   JANPUX000000000
+VERSION     JANPUX000000000.1
+DBLINK      BioProject: PRJNA867733
+            BioSample: SAMN30220800
+KEYWORDS    WGS.
+SOURCE      Enterobacter hormaechei
+  ORGANISM  Enterobacter hormaechei
+            Bacteria; Pseudomonadota; Gammaproteobacteria; Enterobacterales;
+            Enterobacteriaceae; Enterobacter; Enterobacter cloacae complex.
+REFERENCE   1  (bases 1 to 146)
+  AUTHORS   St John,A., Perault,A.I., Giacometti,S.I., Sommerfield,A.G.,
+            DuMont,A.L., Lacey,K.A., Zheng,X., Sproch,J., Petzold,C.,
+            Dancel-Manning,K., Gonzalez,S., Annavajhala,M., Beckford,C.,
+            Zeitouni,N., Liang,F.X., van Bakel,H., Shopsin,B., Uhlemann,A.C.,
+            Pironti,A. and Torres,V.J.
+  TITLE     Capsular Polysaccharide Is Essential for the Virulence of the
+            Antimicrobial-Resistant Pathogen Enterobacter hormaechei
+  JOURNAL   mBio 14 (2), e0259022 (2023)
+   PUBMED   36779722
+REFERENCE   2  (bases 1 to 146)
+  AUTHORS   Perault,A.I., Pironti,A. and Torres,V.J.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (09-AUG-2022) Microbiology, NYU Grossman School of
+            Medicine, 430 E 29th Street, New York, NY 10010, USA
+COMMENT     The Enterobacter hormaechei whole genome shotgun (WGS) project has
+            the project accession JANPUX000000000.  This version of the project
+            (01) has the accession number JANPUX010000000, and consists of
+            sequences JANPUX010000001-JANPUX010000146.
+            The annotation was added by the NCBI Prokaryotic Genome Annotation
+            Pipeline (PGAP). Information about PGAP can be found here:
+            https://www.ncbi.nlm.nih.gov/genome/annotation_prok/
+            
+            ##Genome-Assembly-Data-START##
+            Assembly Method        :: Unicycler v. 2021
+            Genome Representation  :: Full
+            Expected Final Version :: Yes
+            Genome Coverage        :: 343.03x
+            Sequencing Technology  :: Illumina NovaSeq 6000
+            ##Genome-Assembly-Data-END##
+            
+            ##Genome-Annotation-Data-START##
+            Annotation Provider               :: NCBI
+            Annotation Date                   :: 08/11/2022 14:15:52
+            Annotation Pipeline               :: NCBI Prokaryotic Genome
+                                                 Annotation Pipeline (PGAP)
+            Annotation Method                 :: Best-placed reference protein
+                                                 set; GeneMarkS-2+
+            Annotation Software revision      :: 6.2
+            Features Annotated                :: Gene; CDS; rRNA; tRNA; ncRNA;
+                                                 repeat_region
+            Genes (total)                     :: 4,622
+            CDSs (total)                      :: 4,544
+            Genes (coding)                    :: 4,469
+            CDSs (with protein)               :: 4,469
+            Genes (RNA)                       :: 78
+            rRNAs                             :: 1, 1 (16S, 23S)
+            complete rRNAs                    :: 1, 1 (16S, 23S)
+            tRNAs                             :: 71
+            ncRNAs                            :: 5
+            Pseudo Genes (total)              :: 75
+            CDSs (without protein)            :: 75
+            Pseudo Genes (ambiguous residues) :: 0 of 75
+            Pseudo Genes (frameshifted)       :: 28 of 75
+            Pseudo Genes (incomplete)         :: 46 of 75
+            Pseudo Genes (internal stop)      :: 13 of 75
+            Pseudo Genes (multiple problems)  :: 12 of 75
+            ##Genome-Annotation-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..146
+                     /organism="Enterobacter hormaechei"
+                     /mol_type="genomic DNA"
+                     /strain="COV_691"
+                     /isolation_source="respiratory"
+                     /host="Homo sapiens"
+                     /db_xref="taxon:158836"
+                     /country="USA: New York"
+                     /lat_lon="40.7128 N 74.0060 W"
+                     /collected_by="NYU Biorepository"
+WGS         JANPUX010000001-JANPUX010000146
+//
+

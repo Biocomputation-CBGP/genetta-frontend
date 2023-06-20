@@ -78,7 +78,7 @@ class UploadDesignForm(UploadForm):
 class UploadEnhanceDesignForm(UploadDesignForm):
     class Meta:
         csrf = False
-    run_mode = SelectField("Run Mode", choices=r_mode)
+    run_mode = BooleanField("Run Mode")
 
 class UploadGraphForm(UploadDesignForm):
     class Meta:
@@ -138,7 +138,7 @@ def add_choose_graph_form(choices, **kwargs):
         class Meta:
             csrf = False
         submit = SubmitField('Submit')
-        run_mode = SelectField("Run Mode", choices=r_mode)
+        run_mode = BooleanField("Automated")
     setattr(ChooseGraphForm, "graphs", SelectField(
         "Graph Name", choices=[(c, c) for c in choices]))
     return ChooseGraphForm(**kwargs)
@@ -183,17 +183,18 @@ def add_semi_canonicaliser_form(choices, **kwargs):
         close = SubmitField("Cancel")
     fields = []
     for k,v in choices.items():
-        data = {"label":k,"description":v}
-        if isinstance(v,dict):
-            identifier = k
-            data["description"] = "Choice"
-            data["choices"] = [("none","none")]+[(s,f'{s} - {c}% Confidence') for s,c in v.items()]
-            fields.append((identifier,SelectField,data))
-        else:
-            identifier = f'{k} {v}'
-            fields.append((identifier,BooleanField,data))
-    stage_form = form_from_fields([(field_id,f_type(**data)) for field_id,f_type,data in fields])
-    setattr(SemiCanonicaliserGraphForm, "forms",FormField(stage_form))
+        data = {"label":k}
+        identifier = k
+        choices = [("none","none")]
+        for s in v:
+            s_str = f'{str(s[0])} - {s[1]}'
+            key = [s[0].get_key(),s[0].get_type(),s[0].properties]
+            choices.append((key,s_str))
+        data["choices"] = choices
+        fields.append((identifier,SelectField,data))
+    stage_form = form_from_fields([(field_id,f_type(**data)) for 
+                                   field_id,f_type,data in fields])
+    setattr(SemiCanonicaliserGraphForm, "forms", FormField(stage_form))
     return SemiCanonicaliserGraphForm(**kwargs)
 
 def add_enhance_graph_form(pipelines,**kwargs):
@@ -209,7 +210,7 @@ def add_choose_graph_enhancement_form(choices,pipelines, **kwargs):
         class Meta:
             csrf = False
         submit = SubmitField('Submit')
-        run_mode = SelectField("Run Mode", choices=r_mode)
+        run_mode = BooleanField("Run Mode")
     setattr(ChooseGraphForm, "graphs", SelectField(
         "Graph Name", choices=[(c, c) for c in choices]))
     setattr(ChooseGraphForm, "pipelines", SelectField(

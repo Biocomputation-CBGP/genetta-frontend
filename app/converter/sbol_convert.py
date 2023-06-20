@@ -77,7 +77,7 @@ def convert(filename, neo_graph, graph_name):
         sequence = sbol_graph.get_sequences(cd)
         if len(sequence) > 0:
             assert(len(sequence) == 1)
-            props = {model.identifiers.predicates.hasSequence: sequence[0]}
+            props = {nv_hasSequence: sequence[0]}
         else:
             props = None
         n = _add_node(s, o, props)

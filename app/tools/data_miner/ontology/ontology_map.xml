@@ -47,15 +47,6 @@
     <ns1:hasdbxref rdf:resource="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
     <ns1:definition rdf:resource="http://purl.obolibrary.org/obo/IAO_0000115"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://ontology_graph/CHEBI">
-    <ns1:potentialSynonym rdf:resource="http://www.w3.org/2000/01/rdf-schema#subPropertyOf"/>
-    <ns1:potentialSynonym rdf:resource="http://purl.obolibrary.org/obo/IAO_0000115"/>
-    <ns1:potentialSynonym rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
-    <ns1:hasdbxref rdf:resource="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
-    <ns1:definition rdf:resource="http://purl.obolibrary.org/obo/IAO_0000115"/>
-    <ns1:comment rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment"/>
-    <ns1:label rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
-  </rdf:Description>
   <rdf:Description rdf:about="http://ontology_graph/GO">
     <ns1:label rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
     <ns1:definiteSynonym rdf:resource="http://www.geneontology.org/formats/oboInOwl#hasSynonymType"/>
@@ -70,6 +61,15 @@
     <ns1:comment rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment"/>
     <ns1:hasdbxref rdf:resource="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
     <ns1:definition rdf:resource="http://purl.obolibrary.org/obo/IAO_0000115"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://ontology_graph/CHEBI">
+    <ns1:potentialSynonym rdf:resource="http://www.w3.org/2000/01/rdf-schema#subPropertyOf"/>
+    <ns1:potentialSynonym rdf:resource="http://purl.obolibrary.org/obo/IAO_0000115"/>
+    <ns1:potentialSynonym rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+    <ns1:hasdbxref rdf:resource="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+    <ns1:definition rdf:resource="http://purl.obolibrary.org/obo/IAO_0000115"/>
+    <ns1:comment rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment"/>
+    <ns1:label rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://ontology_graph/SBO">
     <ns1:label rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>

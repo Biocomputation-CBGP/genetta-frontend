@@ -52,7 +52,12 @@ class SBOLGraph:
             self._add_triples([(s,p,BNode(new))])
 
     def replace_sequence(self,subject,seq):
-        seqs = self.get_sequence_names(subject)[0]
+        seqs = self.get_sequence_names(subject)
+        if len(seqs) == 0:
+            sn = self.create_sequence_name(subject)
+            self.add_sequence(sn,Literal(seq),identifiers.objects.naseq)
+            return 
+        seqs = seqs[0]
         if len(self.search((None,identifiers.predicates.sequence,seqs))) == 1:
             self._remove_triples([(seqs,identifiers.predicates.elements,None)])
             self._add_triples([(seqs,identifiers.predicates.elements,seq)])
@@ -60,6 +65,7 @@ class SBOLGraph:
             sn = self.create_sequence_name(subject)
             self.add_sequence(sn,Literal(seq),identifiers.objects.naseq)
             self._remove_triples([(subject,identifiers.predicates.sequence,seqs)])
+        self.remove_sequence(seqs)
     
     def replace_property(self,subject,predicate,property):
         self._remove_triples(self.search((subject,predicate,None)))

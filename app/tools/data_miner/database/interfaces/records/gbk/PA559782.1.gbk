@@ -1,0 +1,40 @@
+LOCUS       PA559782                  29 bp    DNA     linear   PAT 27-JAN-2023
+DEFINITION  JP 2022164953-A/4: Vector for expressing avian myeloblastoma virus
+            reverse transcriptase, and method for producing the reverse
+            transcriptase using the same vector.
+ACCESSION   PA559782
+VERSION     PA559782.1
+KEYWORDS    JP 2022164953-A/4.
+SOURCE      synthetic construct
+  ORGANISM  synthetic construct
+            other sequences; artificial sequences.
+REFERENCE   1  (bases 1 to 29)
+  AUTHORS   Terao,Y., Hattori,M., Yamanaka,N. and Noguchi,A.
+  TITLE     Vector for expressing avian myeloblastoma virus reverse
+            transcriptase, and method for producing the reverse transcriptase
+            using the same vector
+  JOURNAL   Patent: JP 2022164953-A 4 31-OCT-2022;
+            TOSOH Corporation
+COMMENT     OS   Artificial Sequence
+            PN   JP 2022164953-A/4
+            PD   31-OCT-2022
+            PF   19-APR-2021 JP 2021070072
+            PR
+            PA   TOSOH Corporation
+            PI   yosuke terao,masato hattori,naoki yamanaka,atsushi noguchi
+            PT   'Vector for expressing avian myeloblastoma virus reverse
+            PT   transcriptase, and
+            PT   method for producing the reverse transcriptase using the same
+            PT   vector'
+            PS   N7
+            CC   tac promoter
+            FH   Key             Location/Qualifiers.
+FEATURES             Location/Qualifiers
+     source          1..29
+                     /organism="synthetic construct"
+                     /mol_type="other DNA"
+                     /db_xref="taxon:32630"
+ORIGIN      
+        1 ttgacaatta atcatcggct cgtataatg
+//
+

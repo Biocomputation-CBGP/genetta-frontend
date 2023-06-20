@@ -10,7 +10,9 @@ class SynonymModule(AbstractModule):
     def __init__(self,truth_graph):
         super().__init__(truth_graph)
     
-    def get(self,subject=None,synonym=None,threshold=90):
+    def get(self,subject=None,synonym=None,threshold=None):
+        if threshold is None:
+            threshold = self._default_threshold
         e = ReservedEdge(n=subject,v=synonym,type=p_synonym,
                          graph_name=self._tg.name)
         res = self._tg.edge_query(e=e)
@@ -32,22 +34,27 @@ class SynonymModule(AbstractModule):
         if not isinstance(synonym,ReservedNode):
             synonym = self._cast_node(synonym,o_synonym)
         synonym = self._cast_node(synonym)
+        if synonym.get_type() is None:
+            synonym.type = o_synonym
         # Check if the subject is in the graph.
         res = self._tg.edge_query(subject,e=p_synonym)
         if len(res) != 0:
             for edge in res:
                 # Full edge exists.
                 if synonym.get_key() == edge.v.get_key():
-                    return self._update_confidence(res[0],score)
+                    self._update_confidence(res[0],score)
+                    return res[0]
             else:
                 # New synonym to existing subject
                 edge = self._cast_edge(subject,synonym,p_synonym,name="Synonym")
-                return self._add_new_edge(edge,confidence=score)
+                self._add_new_edge(edge,confidence=score)
+                return edge
         # Add new edge
         # Even where the synonym node may exist 
         # already we still add the node.
         edge = self._cast_edge(subject,synonym,p_synonym,name="Synonym")
-        return self._add_new_edge(edge)
+        self._add_new_edge(edge)
+        return edge
 
 
     def negative(self,subject,synonym):

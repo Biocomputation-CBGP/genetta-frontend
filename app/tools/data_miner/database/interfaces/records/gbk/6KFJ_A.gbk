@@ -1,0 +1,32 @@
+LOCUS       6KFJ_A                    26 bp    DNA     linear   PRI 01-DEC-2020
+DEFINITION  Chain A, G-quadruplex DNA wtTel26.
+ACCESSION   6KFJ_A
+VERSION     6KFJ_A
+KEYWORDS    .
+SOURCE      Homo sapiens (human)
+  ORGANISM  Homo sapiens
+            Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi;
+            Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini;
+            Catarrhini; Hominidae; Homo.
+REFERENCE   1  (bases 1 to 26)
+  AUTHORS   Liu,L.Y., Liu,W., Wang,K.N., Zhu,B.C., Xia,X.Y., Ji,L.N. and
+            Mao,Z.W.
+  TITLE     Quantitative Detection of G-Quadruplex DNA in Live Cells Based on
+            Photon Counts and Complex Structure Discrimination
+  JOURNAL   Angew. Chem. Int. Ed. Engl. 59 (24), 9719-9726 (2020)
+   PUBMED   32173994
+REFERENCE   2  (bases 1 to 26)
+  AUTHORS   Liu,W., Liu,L.Y. and Mao,Z.W.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (07-JUL-2019)
+COMMENT     NMR solution structure of the 1:1 complex of wtTel26 G-quadruplex
+            and a tripodal cationic fluorescent probe NBTE.
+FEATURES             Location/Qualifiers
+     source          1..26
+                     /organism="Homo sapiens"
+                     /mol_type="other DNA"
+                     /db_xref="taxon:9606"
+ORIGIN      
+        1 ttagggttag ggttagggtt agggtt
+//
+

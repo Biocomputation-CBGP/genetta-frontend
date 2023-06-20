@@ -23,9 +23,6 @@ class DataMiner:
     def get(self,name,timeout=10,db_name=None):
         return self._database.get(name,timeout=timeout,db_name=db_name)
     
-    def get_subject(self,graph,fragments=None):
-        return self._graph_analyser.get_subject(graph,fragments)
-
     def query(self,query,lazy=False):
         return self._database.query(query,lazy=lazy)
 
@@ -36,7 +33,8 @@ class DataMiner:
         return self._database.get_vpr_data(out_fn)
     
     def sequence_match(self,sequence,db_name=None):
-        matches = self._database.sequence_search(sequence,db_name=db_name)
+        s = sequence.replace("\n", "").replace("\t", "").replace(" ", "")
+        matches = self._database.sequence_search(s,db_name=db_name)
         if matches is None:
             return None
         if len(matches) == 1:
@@ -62,8 +60,27 @@ class DataMiner:
         #results += self._language.get_all_nouns(text)   
         return list(set(results))
     
+    def mine_derivatives(self,subject,texts):
+        '''
+        Returns the list of potential derivatives of subject 
+        from list of text.
+        '''
+        return None
+    
+    def mine_interactions(self,subject,texts):
+        '''
+        Returns the dict, where keys are interactions and values is a list 
+        of tuples where t[0] = participant and t[1] = participant type.
+        '''
+        return None
+    
     # -- Ontology -- 
 
-    # -- Graph analyser -- 
+    # -- Graph analyser --     
+    def record_to_node(self,graph,key=None,fragments=[]):
+        return self._graph_analyser.graph_to_node(graph,key,fragments)
+    
+    def get_graph_subject(self,graph,fragments=None):
+        return self._graph_analyser.get_subject(graph,fragments)
     
 data_miner = DataMiner()

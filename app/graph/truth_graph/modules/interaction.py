@@ -7,14 +7,19 @@ class InteractionModule(AbstractModule):
     def __init__(self,truth_graph):
         super().__init__(truth_graph)
     
-    def get(self,subject=None,object=None,interaction=None,threshold=90):
+    def get(self,subject=None,object=None,interaction=None,threshold=None):
+        if threshold is None:
+            threshold = self._default_threshold
         if interaction is None:
-            interaction = [str(f[1]["key"]) for f in model.interaction_predicates()]
+            interaction = [str(f[1]["key"]) for f in 
+                           model.interaction_predicates()]
         if not isinstance(interaction,list):
             interaction = [interaction]
         res = []
         if object is not None:
-            subject = [e.n for e in self._tg.edge_query(v=object,e=interaction)]
+            subject = [e.n for e in self._tg.edge_query(v=object,
+                                                        e=interaction,
+                                                        threshold=threshold)]
         else:
             subject = [subject]
         for s in subject:

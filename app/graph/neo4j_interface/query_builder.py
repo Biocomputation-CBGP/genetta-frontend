@@ -176,6 +176,17 @@ class QueryBuilder:
     def _escape_sequence(self,string):
         return string.replace("[","\[").replace("]","\]").replace("/","\/").replace(":","\:")
     
+    def duplicate_node(self,old,new,graph_name):
+        return f'''
+        MATCH (n:`{old}`)
+        CREATE (newNode:`{new}`)
+        SET newNode = n
+        WITH n, newNode
+        MATCH (n)-[r]->(relatedNode) WHERE ANY(a IN {str(graph_name)} WHERE a IN r.`graph_name`)   
+        CREATE (newNode)-[r]->(relatedNode)
+        SET newRel = r
+        RETURN newNode
+        '''
     def get_isolated_nodes(self,identity=[],predicate="ALL",**kwargs):
         where = ""
         for index, i in enumerate(identity):
@@ -210,16 +221,26 @@ class QueryBuilder:
         RETURN p
         """
 
-    def merge_relationship_nodes(self,source,merged):
+    def merge_nodes(self,source,merged,properties=None):
+        if properties is None:
+            properties = {}
+        p_str = "{properties: {"
+        for index,(k,v) in enumerate(properties.items()):
+            if is_url(k):
+                k = f'`{k}`'
+            p_str += f'{k} : {v}'
+            p_str += ","
+        p_str += "`.*`:'discard'}}"
+
         return f'''
         MATCH (source:`{source}`)
         MATCH (merged: `{merged}`)
-        CALL apoc.refactor.mergeNodes([source,merged],{{properties:"combine",
-                                                        mergeRels:TRUE,
-                                                        produceSelfRel:FALSE,
-                                                        preserveExistingSelfRels:FALSE}})
+        REMOVE merged: `{merged.get_type()}`
+        WITH source,merged
+        CALL apoc.refactor.mergeNodes([source,merged],{p_str})
         YIELD node
-        RETURN node
+        REMOVE source:`{merged}`
+
         '''
 
     def degree(self, source, **kwargs):

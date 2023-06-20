@@ -2,6 +2,7 @@ import os
 import shutil
 import json
 import time
+import ast
 
 from xml.sax._exceptions import SAXParseException
 from rdflib.exceptions import ParserError
@@ -54,7 +55,7 @@ db_host = os.environ.get('NEO4J_HOST', 'localhost')
 db_port = os.environ.get('NEO4J_PORT', '7687')
 db_auth = os.environ.get('NEO4J_AUTH', "neo4j/Radeon12300")
 db_auth = tuple(db_auth.split("/"))
-uri = f'neo4j://{db_host}:{db_port}'
+uri = f'neo4j://{db_host}:{db_port}' 
 login_graph_name = "login_manager"
 
 logger = ChangeLogger()
@@ -67,7 +68,7 @@ editor_dash = EditorDash(__name__, server, graph)
 cypher_dash = CypherDash(__name__, server, graph)
 projection_dash = ProjectionDash(__name__, server, graph)
 truth_dash = TruthDash(__name__, server, graph)
-tg_builder = TruthGraphBuilder(graph.truth)
+tg_builder = TruthGraphBuilder(graph)
 tg_query = GraphQueryHandler(graph.truth)
 enhancer = Enhancer(graph)
 evaluator = Evaluator(graph)
@@ -411,7 +412,7 @@ def evaluate():
         if upload.validate_on_submit():
             gn, _, error = _upload_graph(upload)
             if error is not None:
-                return render_template("evaluate.html", upload=upload, cg=cg,error_str=error)
+                return render_template("evaluate.html",  cg=cg,error_str=error)
         elif cg.validate_on_submit():
             gn = cg.graphs.data
         if gn is not None:
@@ -420,65 +421,56 @@ def evaluate():
             return render_template("evaluate.html", feedback=feedback,
                                    descriptions=descriptions)
 
-    return render_template("evaluate.html", upload=upload, cg=cg)
+    return render_template("evaluate.html",  cg=cg)
 
 
 @server.route('/canonicalise', methods=['GET', 'POST'])
 @login_required
 def canonicalise():
-    upload = forms.UploadEnhanceDesignForm()
     d_names = graph.get_design_names()
-    cg = forms.add_choose_graph_form(d_names)
+    user_d_names = _get_user_gn(d_names)
+    cg = forms.add_choose_graph_form(user_d_names)
     p_changes = None
     changes = None
-    feedback = None
     gn = None
     if request.method == "POST":
         if "close" in request.form:
-            return render_template("canonicalise.html", upload=upload, cg=cg)
-        elif upload.validate_on_submit():
-            gn, rm, error = _upload_graph(upload)
-            if error is not None:
-                return render_template("canonicalise.html", upload=upload, cg=cg,error_str=error)
+            return render_template("canonicaliser.html", cg=cg)
         elif cg.validate_on_submit():
             rm = cg.run_mode.data
             gn = cg.graphs.data
 
         if gn is not None:
-            if upload.run_mode.data == "semi":
-                p_changes, feedback = enhancer.canonicalise_graph(gn, mode=rm)
-            elif upload.run_mode.data == "automated":
-                changes, feedback = enhancer.canonicalise_graph(gn, mode=rm)
+            if not rm:
+                p_changes = enhancer.canonicalise(gn,automated=False)
+            else:
+                changes = enhancer.canonicalise(gn)
 
         if "submit_semi_canonicaliser" in request.form:
             replacements = {}
             for k, v in request.form.items():
                 if k == "submit_semi_canonicaliser":
                     continue
-                if v == "y":
-                    old, new = k.split()
-                    replacements[old] = new
                 elif v != "none":
+                    v = ast.literal_eval(v)
                     replacements[k] = v
             gn = session["c_gn"]
-            changes = enhancer.apply_cannonical(replacements, gn)
+            changes = enhancer.apply_canonicalise(replacements, gn)
             del session["c_gn"]
-            del session["feedback"]
 
         if p_changes is not None:
             if len(p_changes) == 0:
-                return render_template("canonicaliser.html", upload=upload, cg=cg, no_changes=True)
+                return render_template("canonicaliser.html", cg=cg, no_match=True)
             changes = forms.add_semi_canonicaliser_form(p_changes)
             session["c_gn"] = gn
-            session["feedback"] = feedback
-            return render_template("canonicaliser.html", upload=upload, cg=cg, p_changes=changes, gn=gn)
+            return render_template("canonicaliser.html", cg=cg, p_changes=changes, gn=gn)
+        
         if changes is not None:
             if len(changes) == 0:
-                return render_template("canonicaliser.html", upload=upload, cg=cg, no_changes=True)
+                return render_template("canonicaliser.html",cg=cg, no_changes=True)
             else:
-                session["feedback"] = feedback
-                return render_template("canonicaliser.html", upload=upload, cg=cg, s_changes=changes, gn=gn)
-    return render_template("canonicaliser.html", upload=upload, cg=cg)
+                return render_template("canonicaliser.html",  cg=cg, s_changes=changes, gn=gn)
+    return render_template("canonicaliser.html",  cg=cg)
 
 
 @server.route('/enhancement', methods=['GET', 'POST'])
@@ -494,11 +486,11 @@ def enhancement():
     gn = None
     if request.method == "POST":
         if "close" in request.form:
-            return render_template("enhancement.html", upload=upload, cg=cg)
+            return render_template("enhancement.html",  cg=cg)
         elif upload.validate_on_submit():
             gn, rm, error = _upload_graph(upload)
             if error is not None:
-                return render_template("enhancement.html", upload=upload, cg=cg,error_str=error)
+                return render_template("enhancement.html",  cg=cg,error_str=error)
             pipeline = upload.pipelines.data
         elif cg.validate_on_submit():
             rm = cg.run_mode.data
@@ -533,18 +525,18 @@ def enhancement():
 
         if p_changes is not None:
             if len(p_changes) == 0:
-                return render_template("enhancement.html", upload=upload, cg=cg, no_changes=True)
+                return render_template("enhancement.html",  cg=cg, no_changes=True)
             changes = forms.add_semi_enhancer_form(p_changes)
             session["c_gn"] = gn
             session["feedback"] = feedback
-            return render_template("enhancement.html", upload=upload, cg=cg, p_changes=changes, gn=gn)
+            return render_template("enhancement.html",  cg=cg, p_changes=changes, gn=gn)
         if changes is not None:
             if len(changes) == 0:
-                return render_template("enhancement.html", upload=upload, cg=cg, no_changes=True)
+                return render_template("enhancement.html",  cg=cg, no_changes=True)
             else:
                 session["feedback"] = feedback
-                return render_template("enhancement.html", upload=upload, cg=cg, s_changes=changes, gn=gn)
-    return render_template("enhancement.html", upload=upload, cg=cg)
+                return render_template("enhancement.html",  cg=cg, s_changes=changes, gn=gn)
+    return render_template("enhancement.html",  cg=cg)
 
 @server.route('/tutorial', methods=['GET', 'POST'])
 def tutorial():

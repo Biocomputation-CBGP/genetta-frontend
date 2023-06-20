@@ -2,7 +2,6 @@ import types
 from app.tools.kg_expansion.seeder.datasets.cello import Cello
 from app.tools.kg_expansion.seeder.datasets.igem import IGEM
 from app.tools.kg_expansion.seeder.datasets.vpr import VPR
-from app.tools.kg_expansion.seeder.aligner import Aligner
 from app.tools.aligner import aligner
 def _add_dataset(obj, ds):
     e_name = f'enable_{ds.__class__.__name__}'.lower()

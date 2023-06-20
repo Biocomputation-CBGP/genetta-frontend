@@ -1,0 +1,306 @@
+LOCUS       NM_022488               1568 bp    mRNA    linear   PRI 25-DEC-2022
+DEFINITION  Homo sapiens autophagy related 3 (ATG3), transcript variant 1,
+            mRNA.
+ACCESSION   NM_022488
+VERSION     NM_022488.5
+KEYWORDS    RefSeq; MANE Select.
+SOURCE      Homo sapiens (human)
+  ORGANISM  Homo sapiens
+            Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi;
+            Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini;
+            Catarrhini; Hominidae; Homo.
+REFERENCE   1  (bases 1 to 1568)
+  AUTHORS   da Silva Lima N, Fondevila MF, Novoa E, Buque X, Mercado-Gomez M,
+            Gallet S, Gonzalez-Rellan MJ, Fernandez U, Loyens A, Garcia-Vence
+            M, Chantada-Vazquez MDP, Bravo SB, Maranon P, Senra A, Escudero A,
+            Leiva M, Guallar D, Fidalgo M, Gomes P, Claret M, Sabio G,
+            Varela-Rey M, Delgado TC, Montero-Vallejo R, Ampuero J, Lopez M,
+            Dieguez C, Herrero L, Serra D, Schwaninger M, Prevot V,
+            Gallego-Duran R, Romero-Gomez M, Iruzubieta P, Crespo J,
+            Martinez-Chantar ML, Garcia-Monzon C, Gonzalez-Rodriguez A,
+            Aspichueta P and Nogueiras R.
+  TITLE     Inhibition of ATG3 ameliorates liver steatosis by increasing
+            mitochondrial function
+  JOURNAL   J Hepatol 76 (1), 11-24 (2022)
+   PUBMED   34555423
+  REMARK    GeneRIF: Inhibition of ATG3 ameliorates liver steatosis by
+            increasing mitochondrial function.
+REFERENCE   2  (bases 1 to 1568)
+  AUTHORS   Zhou K, Xu Y, Wang Q and Dong L.
+  TITLE     Overexpression of miR-431 attenuates hypoxia/reoxygenation-induced
+            myocardial damage via autophagy-related 3
+  JOURNAL   Acta Biochim Biophys Sin (Shanghai) 53 (2), 140-148 (2021)
+   PUBMED   33382073
+  REMARK    GeneRIF: Overexpression of miR-431 attenuates
+            hypoxia/reoxygenation-induced myocardial damage via
+            autophagy-related 3.
+REFERENCE   3  (bases 1 to 1568)
+  AUTHORS   Ye Y, Tyndall ER, Bui V, Tang Z, Shen Y, Jiang X, Flanagan JM, Wang
+            HG and Tian F.
+  TITLE     An N-terminal conserved region in human Atg3 couples membrane
+            curvature sensitivity to conjugase activity during autophagy
+  JOURNAL   Nat Commun 12 (1), 374 (2021)
+   PUBMED   33446636
+  REMARK    GeneRIF: An N-terminal conserved region in human Atg3 couples
+            membrane curvature sensitivity to conjugase activity during
+            autophagy.
+            Publication Status: Online-Only
+REFERENCE   4  (bases 1 to 1568)
+  AUTHORS   Haenig C, Atias N, Taylor AK, Mazza A, Schaefer MH, Russ J,
+            Riechers SP, Jain S, Coughlin M, Fontaine JF, Freibaum BD,
+            Brusendorf L, Zenkner M, Porras P, Stroedicke M, Schnoegl S,
+            Arnsburg K, Boeddrich A, Pigazzini L, Heutink P, Taylor JP,
+            Kirstein J, Andrade-Navarro MA, Sharan R and Wanker EE.
+  TITLE     Interactome Mapping Provides a Network of Neurodegenerative Disease
+            Proteins and Uncovers Widespread Protein Aggregation in Affected
+            Brains
+  JOURNAL   Cell Rep 32 (7), 108050 (2020)
+   PUBMED   32814053
+REFERENCE   5  (bases 1 to 1568)
+  AUTHORS   Luck K, Kim DK, Lambourne L, Spirohn K, Begg BE, Bian W, Brignall
+            R, Cafarelli T, Campos-Laborie FJ, Charloteaux B, Choi D, Cote AG,
+            Daley M, Deimling S, Desbuleux A, Dricot A, Gebbia M, Hardy MF,
+            Kishore N, Knapp JJ, Kovacs IA, Lemmens I, Mee MW, Mellor JC,
+            Pollis C, Pons C, Richardson AD, Schlabach S, Teeking B, Yadav A,
+            Babor M, Balcha D, Basha O, Bowman-Colin C, Chin SF, Choi SG,
+            Colabella C, Coppin G, D'Amata C, De Ridder D, De Rouck S,
+            Duran-Frigola M, Ennajdaoui H, Goebels F, Goehring L, Gopal A,
+            Haddad G, Hatchi E, Helmy M, Jacob Y, Kassa Y, Landini S, Li R, van
+            Lieshout N, MacWilliams A, Markey D, Paulson JN, Rangarajan S,
+            Rasla J, Rayhan A, Rolland T, San-Miguel A, Shen Y, Sheykhkarimli
+            D, Sheynkman GM, Simonovsky E, Tasan M, Tejeda A, Tropepe V,
+            Twizere JC, Wang Y, Weatheritt RJ, Weile J, Xia Y, Yang X,
+            Yeger-Lotem E, Zhong Q, Aloy P, Bader GD, De Las Rivas J, Gaudet S,
+            Hao T, Rak J, Tavernier J, Hill DE, Vidal M, Roth FP and Calderwood
+            MA.
+  TITLE     A reference map of the human binary protein interactome
+  JOURNAL   Nature 580 (7803), 402-408 (2020)
+   PUBMED   32296183
+REFERENCE   6  (bases 1 to 1568)
+  AUTHORS   Sou YS, Tanida I, Komatsu M, Ueno T and Kominami E.
+  TITLE     Phosphatidylserine in addition to phosphatidylethanolamine is an in
+            vitro target of the mammalian Atg8 modifiers, LC3, GABARAP, and
+            GATE-16
+  JOURNAL   J Biol Chem 281 (6), 3017-3024 (2006)
+   PUBMED   16303767
+REFERENCE   7  (bases 1 to 1568)
+  AUTHORS   Rush J, Moritz A, Lee KA, Guo A, Goss VL, Spek EJ, Zhang H, Zha XM,
+            Polakiewicz RD and Comb MJ.
+  TITLE     Immunoaffinity profiling of tyrosine phosphorylation in cancer
+            cells
+  JOURNAL   Nat Biotechnol 23 (1), 94-101 (2005)
+   PUBMED   15592455
+REFERENCE   8  (bases 1 to 1568)
+  AUTHORS   Tanida I, Ueno T and Kominami E.
+  TITLE     Human light chain 3/MAP1LC3B is cleaved at its carboxyl-terminal
+            Met121 to expose Gly120 for lipidation and targeting to
+            autophagosomal membranes
+  JOURNAL   J Biol Chem 279 (46), 47704-47710 (2004)
+   PUBMED   15355958
+REFERENCE   9  (bases 1 to 1568)
+  AUTHORS   Brill LM, Salomon AR, Ficarro SB, Mukherji M, Stettler-Gill M and
+            Peters EC.
+  TITLE     Robust phosphoproteomic profiling of tyrosine phosphorylation sites
+            from human T cells using immobilized metal affinity chromatography
+            and tandem mass spectrometry
+  JOURNAL   Anal Chem 76 (10), 2763-2772 (2004)
+   PUBMED   15144186
+REFERENCE   10 (bases 1 to 1568)
+  AUTHORS   Tanida I, Tanida-Miyake E, Komatsu M, Ueno T and Kominami E.
+  TITLE     Human Apg3p/Aut1p homologue is an authentic E2 enzyme for multiple
+            substrates, GATE-16, GABARAP, and MAP-LC3, and facilitates the
+            conjugation of hApg12p to hApg5p
+  JOURNAL   J Biol Chem 277 (16), 13739-13744 (2002)
+   PUBMED   11825910
+  REMARK    GeneRIF: Human Apg3p/Aut1p homologue is an authentic E2 enzyme for
+            multiple substrates, GATE-16, GABARAP, and MAP-LC3, and facilitates
+            the conjugation of hApg12p to hApg5p
+COMMENT     REVIEWED REFSEQ: This record has been curated by NCBI staff. The
+            reference sequence was derived from DC311625.1, AC092692.6,
+            AW408464.1 and BC024221.2.
+            
+            On May 17, 2019 this sequence version replaced NM_022488.4.
+            
+            Summary: This gene encodes a ubiquitin-like-conjugating enzyme and
+            is a component of ubiquitination-like systems involved in
+            autophagy, the process of degradation, turnover and recycling of
+            cytoplasmic constituents in eukaryotic cells. This protein is known
+            to play a role in regulation of autophagy during cell death. A
+            pseudogene of this gene is located on chromosome 20. Alternative
+            splicing results in multiple transcript variants encoding different
+            isoforms. [provided by RefSeq, Jul 2013].
+            
+            Transcript Variant: This variant (1) represents the shorter
+            transcript and encodes the longer isoform (1).
+            
+            Publication Note:  This RefSeq record includes a subset of the
+            publications that are available for this gene. Please see the Gene
+            record to access additional publications.
+            
+            ##Evidence-Data-START##
+            Transcript exon combination :: SRR1163658.192031.1, AL137515.1
+                                           [ECO:0000332]
+            RNAseq introns              :: mixed sample support SAMEA1965299,
+                                           SAMEA1966682 [ECO:0006172]
+            ##Evidence-Data-END##
+            
+            ##RefSeq-Attributes-START##
+            MANE Ensembl match     :: ENST00000283290.10/ ENSP00000283290.5
+            RefSeq Select criteria :: based on conservation, expression,
+                                      longest protein
+            ##RefSeq-Attributes-END##
+            COMPLETENESS: complete on the 3' end.
+PRIMARY     REFSEQ_SPAN         PRIMARY_IDENTIFIER PRIMARY_SPAN        COMP
+            1-103               DC311625.1         2-104
+            104-104             AC092692.6         57545-57545         c
+            105-324             AW408464.1         13-232
+            325-1566            BC024221.2         1-1242
+            1567-1568           AC092692.6         28196-28197         c
+FEATURES             Location/Qualifiers
+     source          1..1568
+                     /organism="Homo sapiens"
+                     /mol_type="mRNA"
+                     /db_xref="taxon:9606"
+                     /chromosome="3"
+                     /map="3q13.2"
+     gene            1..1568
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /note="autophagy related 3"
+                     /db_xref="GeneID:64422"
+                     /db_xref="HGNC:HGNC:20962"
+                     /db_xref="MIM:609606"
+     exon            1..506
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     misc_feature    78..80
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /note="upstream in-frame stop codon"
+     CDS             435..1379
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /note="isoform 1 is encoded by transcript variant 1;
+                     ubiquitin-like-conjugating enzyme ATG3; autophagy-related
+                     protein 3; ATG3 autophagy related 3 homolog; APG3
+                     autophagy 3-like"
+                     /codon_start=1
+                     /product="ubiquitin-like-conjugating enzyme ATG3 isoform
+                     1"
+                     /protein_id="NP_071933.2"
+                     /db_xref="CCDS:CCDS2966.1"
+                     /db_xref="GeneID:64422"
+                     /db_xref="HGNC:HGNC:20962"
+                     /db_xref="MIM:609606"
+                     /translation="MQNVINTVKGKALEVAEYLTPVLKESKFKETGVITPEEFVAAGD
+                     HLVHHCPTWQWATGEELKVKAYLPTGKQFLVTKNVPCYKRCKQMEYSDELEAIIEEDD
+                     GDGGWVDTYHNTGITGITEAVKEITLENKDNIRLQDCSALCEEEEDEDEGEAADMEEY
+                     EESGLLETDEATLDTRKIVEACKAKTDAGGEDAILQTRTYDLYITYDKYYQTPRLWLF
+                     GYDEQRQPLTVEHMYEDISQDHVKKTVTIENHPHLPPPPMCSVHPCRHAEVMKKIIET
+                     VAEGGGELGVHMYLLIFLKFVQAVIPTIEYDYTRHFTM"
+     misc_feature    435..437
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /note="N-acetylmethionine.
+                     /evidence=ECO:0007744|PubMed:19413330,
+                     ECO:0007744|PubMed:22223895; propagated from
+                     UniProtKB/Swiss-Prot (Q9NT62.1); acetylation site"
+     misc_feature    861..923
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /note="propagated from UniProtKB/Swiss-Prot (Q9NT62.1);
+                     Region: Disordered. /evidence=ECO:0000256|SAM:MobiDB-lite"
+     misc_feature    930..941
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /note="propagated from UniProtKB/Swiss-Prot (Q9NT62.1);
+                     Region: Caspase cleavage motif LETD"
+     misc_feature    939..944
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /note="Cleavage, by CASP8; propagated from
+                     UniProtKB/Swiss-Prot (Q9NT62.1); cleavage site"
+     exon            507..548
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     exon            549..598
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     exon            599..669
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     exon            670..777
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     exon            778..827
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     exon            828..909
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     exon            910..944
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     exon            945..1100
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     exon            1101..1228
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     exon            1229..1297
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     exon            1298..1568
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /inference="alignment:Splign:2.1.0"
+     regulatory      1547..1552
+                     /regulatory_class="polyA_signal_sequence"
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /note="hexamer: AATAAA"
+     polyA_site      1568
+                     /gene="ATG3"
+                     /gene_synonym="APG3; APG3-LIKE; APG3L; hApg3; PC3-96"
+                     /note="major polyA site"
+ORIGIN      
+        1 agtgtcacgt gaggccccgg tggcggcgca gctacggcaa gagagtgaga aggaagggaa
+       61 gccggaaggg gcgcgagtga agcaaagcga ggacagacag ctcgcagagg gcgaggggtg
+      121 cgtgtgcgtc cgcttctcac ctcaggtctc ccttcggccc cgctgccctc cctcgcggct
+      181 gggtgacagc tgggtccggt ccgtcgcggg ctgcctgggg tgcgaggatc gcgcaccccg
+      241 tcttcgcgcg ctgtgcctgc cgccccgccc cctcgtcccg cccgtcccgt cgcgtcgcgt
+      301 cccgtcccct cgggtgctgc cagccgggtg ctgatgcgag tcggtggcag cgaggacatt
+      361 ttctgactcc ctggcccctg acacggctgc actttccatc ccgtcgcggg gccggccgct
+      421 actccggccc caggatgcag aatgtgatta atactgtgaa gggaaaggca ctggaagtgg
+      481 ctgagtacct gaccccggtc ctcaaggaat caaagtttaa ggaaacaggt gtaattaccc
+      541 cagaagagtt tgtggcagct ggagatcacc tagtccacca ctgtccaaca tggcaatggg
+      601 ctacagggga agaattgaaa gtgaaggcat acctaccaac aggcaaacaa tttttggtaa
+      661 ccaaaaatgt gccgtgctat aagcggtgca aacagatgga atattcagat gaattggaag
+      721 ctatcattga agaagatgat ggtgatggcg gatgggtaga tacatatcac aacacaggta
+      781 ttacaggaat aacggaagcc gttaaagaga tcacactgga aaataaggac aatataaggc
+      841 ttcaagattg ctcagcacta tgtgaagagg aagaagatga agatgaagga gaagctgcag
+      901 atatggaaga atatgaagag agtggattgt tggaaacaga tgaggctacc ctagatacaa
+      961 ggaaaatagt agaagcttgt aaagccaaaa ctgatgctgg cggtgaagat gctattttgc
+     1021 aaaccagaac ttatgacctt tacatcactt atgataaata ttaccagact ccacgattat
+     1081 ggttgtttgg ctatgatgag caacggcagc ctttaacagt tgagcacatg tatgaagaca
+     1141 tcagtcagga tcatgtgaag aaaacagtga ccattgaaaa tcaccctcat ctgccaccac
+     1201 ctcccatgtg ttcagttcac ccatgcaggc atgctgaggt gatgaagaaa atcattgaga
+     1261 ctgttgcaga aggaggggga gaacttggag ttcatatgta tcttcttatt ttcttgaaat
+     1321 ttgtacaagc tgtcattcca acaatagaat atgactacac aagacacttc acaatgtaat
+     1381 gaagagagca taaaatctat cctaattatt ggttctgatt tttaaagaat taacccatag
+     1441 atgtgaccat tgaccatatt catcaatata tacagtttct ctaataaggg acttatatgt
+     1501 ttatgcatta aataaaaata tgttccacta ccagccttac ttgtttaata aaaatcagtg
+     1561 caaagaga
+//
+

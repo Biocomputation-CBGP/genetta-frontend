@@ -1,0 +1,35 @@
+LOCUS       OF062907                  30 bp    DNA     linear   PAT 04-AUG-2021
+DEFINITION  KR 1020200116084-A/662: FERMENTATION PROCESS.
+ACCESSION   OF062907
+VERSION     OF062907.1
+KEYWORDS    KR 1020200116084-A/662.
+SOURCE      synthetic construct
+  ORGANISM  synthetic construct
+            other sequences; artificial sequences.
+REFERENCE   1  (bases 1 to 30)
+  AUTHORS   Gabant,P., El Bakkoury,M. and Van Melderen,L.
+  TITLE     FERMENTATION PROCESS
+  JOURNAL   Patent: KR 1020200116084-A 662 08-OCT-2020;
+            SYNGULON S.A.|UNIVERSITE LIBRE DE BRUXELLES
+COMMENT     KN   KR 1020207020105-A/662
+            AN   KR 1020207020105
+            AD   2020-07-10
+            PN   KR 1020200116084
+            PD   2020-10-08
+            AT   FERMENTATION PROCESS
+            AI   Gabant, Philippe|El Bakkoury, Mohamed|Van Melderen, Laurence
+            AA   SYNGULON S.A.|UNIVERSITE LIBRE DE BRUXELLES
+            PR   EP 17208600.1=2017-12-19
+            OS   Artificial Sequence
+            TY   DNA
+            CC   Pveg
+            FH   Key   Location/Qualifiers.
+FEATURES             Location/Qualifiers
+     source          1..30
+                     /organism="synthetic construct"
+                     /mol_type="other DNA"
+                     /db_xref="taxon:32630"
+ORIGIN      
+        1 aatgggctcg tgttgtacaa taaatgtagt
+//
+

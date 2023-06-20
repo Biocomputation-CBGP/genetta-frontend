@@ -9,7 +9,9 @@ class DerivativeModule(AbstractModule):
     def __init__(self,truth_graph):
         super().__init__(truth_graph)
     
-    def get(self,subject=None,derivative=None,threshold=90,directed=False):
+    def get(self,subject=None,derivative=None,threshold=None,directed=False):
+        if threshold is None:
+            threshold = self._default_threshold
         e = ReservedEdge(n=subject,v=derivative,type=p_derivative,
                          graph_name=self._tg.name)
         res = self._tg.edge_query(e=e,directed=directed,

@@ -1,0 +1,217 @@
+LOCUS       NM_019440               3537 bp    mRNA    linear   ROD 07-MAY-2023
+DEFINITION  Mus musculus immunity-related GTPase family M member 2 (Irgm2),
+            mRNA.
+ACCESSION   NM_019440
+VERSION     NM_019440.3
+KEYWORDS    RefSeq; RefSeq Select.
+SOURCE      Mus musculus (house mouse)
+  ORGANISM  Mus musculus
+            Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi;
+            Mammalia; Eutheria; Euarchontoglires; Glires; Rodentia; Myomorpha;
+            Muroidea; Muridae; Murinae; Mus; Mus.
+REFERENCE   1  (bases 1 to 3537)
+  AUTHORS   Christgen S, Place DE, Zheng M, Briard B, Yamamoto M and Kanneganti
+            TD.
+  TITLE     The IFN-inducible GTPase IRGB10 regulates viral replication and
+            inflammasome activation during influenza A virus infection in mice
+  JOURNAL   Eur J Immunol 52 (2), 285-296 (2022)
+   PUBMED   34694641
+REFERENCE   2  (bases 1 to 3537)
+  AUTHORS   Dockterman J, Fee BE, Taylor GA and Coers J.
+  TITLE     Murine Irgm Paralogs Regulate Nonredundant Functions To Execute
+            Host Defense to Toxoplasma gondii
+  JOURNAL   Infect Immun 89 (11), e0020221 (2021)
+   PUBMED   34338548
+  REMARK    GeneRIF: Murine Irgm Paralogs Regulate Nonredundant Functions To
+            Execute Host Defense to Toxoplasma gondii.
+REFERENCE   3  (bases 1 to 3537)
+  AUTHORS   Pradipta A, Sasai M, Motani K, Ma JS, Lee Y, Kosako H and Yamamoto
+            M.
+  TITLE     Cell-autonomous Toxoplasma killing program requires Irgm2 but not
+            its microbe vacuolar localization
+  JOURNAL   Life Sci Alliance 4 (7), e202000960 (2021)
+   PUBMED   34078740
+  REMARK    Publication Status: Online-Only
+REFERENCE   4  (bases 1 to 3537)
+  AUTHORS   Eren E, Planes R, Bagayoko S, Bordignon PJ, Chaoui K, Hessel A,
+            Santoni K, Pinilla M, Lagrange B, Burlet-Schiltz O, Howard JC,
+            Henry T, Yamamoto M and Meunier E.
+  TITLE     Irgm2 and Gate-16 cooperatively dampen Gram-negative
+            bacteria-induced caspase-11 response
+  JOURNAL   EMBO Rep 21 (11), e50829 (2020)
+   PUBMED   33124769
+REFERENCE   5  (bases 1 to 3537)
+  AUTHORS   Finethy R, Dockterman J, Kutsch M, Orench-Rivera N, Wallace GD,
+            Piro AS, Luoma S, Haldar AK, Hwang S, Martinez J, Kuehn MJ, Taylor
+            GA and Coers J.
+  TITLE     Dynamin-related Irgm proteins modulate LPS-induced caspase-11
+            activation and septic shock
+  JOURNAL   EMBO Rep 21 (11), e50830 (2020)
+   PUBMED   33124745
+REFERENCE   6  (bases 1 to 3537)
+  AUTHORS   Hunn JP, Koenen-Waisman S, Papic N, Schroeder N, Pawlowski N, Lange
+            R, Kaiser F, Zerrahn J, Martens S and Howard JC.
+  TITLE     Regulatory interactions between IRG resistance GTPases in the
+            cellular response to Toxoplasma gondii
+  JOURNAL   EMBO J 27 (19), 2495-2509 (2008)
+   PUBMED   18772884
+REFERENCE   7  (bases 1 to 3537)
+  AUTHORS   Miyairi I, Tatireddigari VR, Mahdi OS, Rose LA, Belland RJ, Lu L,
+            Williams RW and Byrne GI.
+  TITLE     The p47 GTPases Iigp2 and Irgb10 regulate innate immunity and
+            inflammation to murine Chlamydia psittaci infection
+  JOURNAL   J Immunol 179 (3), 1814-1824 (2007)
+   PUBMED   17641048
+  REMARK    GeneRIF: p47 GTPases Irgb10 and Iigp2 act together to confer
+            differential susceptibility against murine chlamydial infection.
+REFERENCE   8  (bases 1 to 3537)
+  AUTHORS   Martens S, Parvanova I, Zerrahn J, Griffiths G, Schell G, Reichmann
+            G and Howard JC.
+  TITLE     Disruption of Toxoplasma gondii parasitophorous vacuoles by the
+            mouse p47-resistance GTPases
+  JOURNAL   PLoS Pathog 1 (3), e24 (2005)
+   PUBMED   16304607
+REFERENCE   9  (bases 1 to 3537)
+  AUTHORS   Bekpen C, Hunn JP, Rohde C, Parvanova I, Guethlein L, Dunn DM,
+            Glowalla E, Leptin M and Howard JC.
+  TITLE     The interferon-inducible p47 (IRG) GTPases in vertebrates: loss of
+            the cell autonomous resistance mechanism in the human lineage
+  JOURNAL   Genome Biol 6 (11), R92 (2005)
+   PUBMED   16277747
+REFERENCE   10 (bases 1 to 3537)
+  AUTHORS   Boehm U, Guethlein L, Klamp T, Ozbek K, Schaub A, Futterer A,
+            Pfeffer K and Howard JC.
+  TITLE     Two families of GTPases dominate the complex cellular response to
+            IFN-gamma
+  JOURNAL   J Immunol 161 (12), 6715-6723 (1998)
+   PUBMED   9862701
+COMMENT     VALIDATED REFSEQ: This record has undergone validation or
+            preliminary review. The reference sequence was derived from
+            AK142291.1 and AJ007972.1.
+            
+            On Sep 20, 2008 this sequence version replaced NM_019440.2.
+            
+            Publication Note:  This RefSeq record includes a subset of the
+            publications that are available for this gene. Please see the Gene
+            record to access additional publications.
+            
+            ##Evidence-Data-START##
+            Transcript exon combination :: AK142291.1, AK165347.1 [ECO:0000332]
+            RNAseq introns              :: single sample supports all introns
+                                           SAMN00849374, SAMN00849375
+                                           [ECO:0000348]
+            ##Evidence-Data-END##
+            
+            ##RefSeq-Attributes-START##
+            RefSeq Select criteria :: based on single protein-coding transcript
+            ##RefSeq-Attributes-END##
+PRIMARY     REFSEQ_SPAN         PRIMARY_IDENTIFIER PRIMARY_SPAN        COMP
+            1-2041              AK142291.1         3-2043
+            2042-3537           AJ007972.1         1843-3338
+FEATURES             Location/Qualifiers
+     source          1..3537
+                     /organism="Mus musculus"
+                     /mol_type="mRNA"
+                     /strain="C57BL/6"
+                     /db_xref="taxon:10090"
+                     /chromosome="11"
+                     /map="11"
+     gene            1..3537
+                     /gene="Irgm2"
+                     /gene_synonym="GTPI; Ifggd2; Iigp2"
+                     /note="immunity-related GTPase family M member 2"
+                     /db_xref="GeneID:54396"
+                     /db_xref="MGI:MGI:1926262"
+     exon            1..194
+                     /gene="Irgm2"
+                     /gene_synonym="GTPI; Ifggd2; Iigp2"
+                     /inference="alignment:Splign:2.1.0"
+     misc_feature    33..35
+                     /gene="Irgm2"
+                     /gene_synonym="GTPI; Ifggd2; Iigp2"
+                     /note="upstream in-frame stop codon"
+     exon            195..3514
+                     /gene="Irgm2"
+                     /gene_synonym="GTPI; Ifggd2; Iigp2"
+                     /inference="alignment:Splign:2.1.0"
+     CDS             216..1403
+                     /gene="Irgm2"
+                     /gene_synonym="GTPI; Ifggd2; Iigp2"
+                     /note="interferon inducible GTPase 2; interferon-g induced
+                     GTPase; interferon-gamma-inducible GTPase Ifggd2 protein"
+                     /codon_start=1
+                     /product="immunity-related GTPase family M protein 2"
+                     /protein_id="NP_062313.3"
+                     /db_xref="CCDS:CCDS48803.1"
+                     /db_xref="GeneID:54396"
+                     /db_xref="MGI:MGI:1926262"
+                     /translation="MEEAVESPEVKEFEYFSDAVFIPKDGNTLSVGVIKRIETAVKEG
+                     EVVKVVSIVKEIIQNVSRNKIKIAVTGDSGNGMSSFINALRLIGHEEKDSAPTGVVRT
+                     TQKPTCYFSSHFPYVELWDLPGLGATAQSVESYLEEMQISIYDLIIIVASEQFSLNHV
+                     KLAITMQRMRKRFYVVWTKLDRDLSTSTFPEPQLLQSIQRNIRDSLQKEKVKEHPMFL
+                     VSVFKPESHDFPKLRETLQKDLPVIKYHGLVETLYQVCEKTVNERVESIKKSIDEDNL
+                     HTEFGISDPGNAIEIRKAFQKTFGLDDISLHLVALEMKNKHFNTSMESQETQRYQQDD
+                     WVLARLYRTGTRVGSIGFDYMKCCFTSHHSRCKQQKDILDETAAKAKEVLLKILRLSI
+                     PHP"
+ORIGIN      
+        1 ctagaagttg gggacttaca tctgggccaa catagataga gcagggtctg agaggaaacc
+       61 taggagctca ggctgccctt cagctgctcc tgcctcttct aatcgctctt ccccacagga
+      121 ccctgcccca ccacacttct ctctctcctg accgtcctga gcctggattg cagttttgta
+      181 aggcttctga gcaggttgcc ccgttgctcg acaacatgga agaggcagtt gagtcacctg
+      241 aggttaaaga atttgaatac ttctccgacg ctgtattcat tcccaaagac ggcaatactt
+      301 tatctgtagg cgtcattaag agaattgaga ctgccgtgaa agaaggggag gtagtgaaag
+      361 tggtttctat agttaaagag atcatacaga acgtttccag aaacaaaata aagatcgctg
+      421 tgactgggga ctctggcaat ggcatgtcat ctttcatcaa tgcccttagg ctcatcggac
+      481 acgaagagaa agattcagct cccactgggg tggtgagaac cacccagaaa ccaacctgtt
+      541 acttttcctc ccactttccc tatgtggagc tgtgggacct gcctggctta ggggccacag
+      601 cccagagtgt ggagagctac ctggaagaga tgcagatcag catatacgac cttatcatca
+      661 tcgtagcttc tgagcagttc agcttaaatc atgtgaagct ggccataacc atgcagagga
+      721 tgagaaagag gttctatgtc gtctggacca agctggacag ggacctcagc acaagtacct
+      781 tccctgaacc ccagctactg cagagtatcc aaaggaatat ccgggatagt cttcagaagg
+      841 agaaagtgaa ggagcacccc atgttcctgg tatctgtctt taagcctgaa tcacatgact
+      901 tcccaaagct tagggagaca ctacaaaaag acctccctgt catcaagtac cacggcctcg
+      961 tcgaaaccct ttaccaagtc tgtgagaaaa ctgttaatga gagagtagag tccattaaaa
+     1021 agagtataga tgaagataac ctacacacag agtttgggat ctcggatccg ggtaacgcga
+     1081 tagagattcg gaaagccttc caaaaaacct ttggtttgga tgacatatct ctccacctgg
+     1141 ttgctctgga aatgaaaaat aaacatttca acactagtat ggagtcccag gagacccaga
+     1201 ggtaccaaca agatgactgg gtgctggctc ggttgtatcg cactggaacc cgggttggct
+     1261 ctataggttt tgactacatg aagtgctgct ttacctctca tcacagtcga tgcaaacaac
+     1321 agaaagatat acttgatgaa actgctgcca aagccaagga agttctgtta aaaatcctga
+     1381 gactctccat tcctcatcct taggaaggtt tagacaactg gagtcttctc cccagccctg
+     1441 taccccatgt gtacccccag ttgagataac acccctctcc cccacgccat ggggtccaag
+     1501 ttccttgagg ttactaggcc gactgtctta atgggtatcc ctctcgtgag acaccataat
+     1561 gggttttgct aactgaatta cctgggatct gactatagga taagtttccc tgttctaatt
+     1621 gtttggaatg ccatgtttga cacatgctca ccttagcgcc aacgacgagg ggcctcttgg
+     1681 tctactcctg tctctttttg tctcttttcg tccttgactc tggagatgga gtatctctta
+     1741 gggaatgggg aagagcttgt ctttggctat tgtctgaaaa acgtggccag cagaggcctg
+     1801 ttctccaacc cctcctctga tgtgtaaaga ggagaggggc attaactccg gcattactag
+     1861 taataggatt cacacagtgc tgaagagaat gattctcagc accctacact acccttgatg
+     1921 gtgtcaatgg tatcatgatt agtcctggcc cttcacactc tgggctctca gtcttatatt
+     1981 ggacttcaac ttcttcagca gcccctaatt ctgcaggctg cacctccatc cagacacaca
+     2041 aggacccttc tccctttgcc atgaagcact cacatttgaa tctgtgtgtg tgactttgca
+     2101 tttaagacag gtgccgctcc gtgttctgtc atgctccttt ctctcagccc tgctttcgat
+     2161 agatatcagt actgtcagcc caacttccct agcggtctca ggcctctgtc ctccccttct
+     2221 cccctttcac ctctttggca caatgttaaa tgctttcttt cttttttctc tgtgtagccc
+     2281 tggctgtcct ggaactcact ctgtagacca ggctggcctc aaactcagaa atccacctgc
+     2341 ctctgccaac tgttaccagc atcacaccgg agcgtttagt ttgggctcat agtttgctag
+     2401 tacagtccat cacagctgaa agtcatcaca gtgggagcac agagcagctg atcccgtgtg
+     2461 tccgctatca gggagcagag agagatgaat agggctcttt ggcacacatt ctccttttca
+     2521 ttcagcccaa gaccagccta tagaatgata tcatccacgt tcagagtggg tcttccaacc
+     2581 ttcatgaacc aagtccagag actccttcat agacacgccc aaaggtctct ttgcatagtg
+     2641 attctagatc ctgccaacct gccaaccaat attaactaca caggcactca ggggatctag
+     2701 gacttttatt ggttaatagt gggaagaagg ttgggtgtgg cttagtagta caatgttttc
+     2761 ctagcacatg gaaggctatg gttttgatac ctagaaagaa acaaaatctg ttctgaaatg
+     2821 gaaggaaaat gccaattata tttgttgaga aaatacaatt aaattatatt attggcacag
+     2881 gcacttcaaa aaaagaatca cttaaatgta aaaggtgggt ttactgtata tgctgtgggt
+     2941 aaggatagga tggactaaga agtctcacga tggtgggatt gggggtgagc caagttctgc
+     3001 taagactcac cttccacctg cttgttcttt ggttaatgtg gtgccatgga agtcacagga
+     3061 gaggtctgca aagaaaccgc agaggttttg tctgtcgtcc ttatgacatt cgtgtgtact
+     3121 cagaaataat tcctgaggtc aaggttatgg catagatgct gctccgcaat gtcagctgta
+     3181 aataagaaag cgagtttgct ctttaaaagc tcgcctgagg ttgtatgtgt tggtcacagg
+     3241 gtatctcacc tggccccagc actgaggaaa ctgtgatctc actgttggcc gggctggaga
+     3301 agcagggtgt gaattctctc cgtgtcttag gtcatagaca tagattttct ctttgctggt
+     3361 tgtatgtaca tacctatcta tatacagata cagaagtata tgtacacaga tattatatat
+     3421 tcatcacaca catttattat gcattgtatg taacatacat gtagtgttga tctttgtgat
+     3481 ggaataaata atcacagtat attatataaa tagaaaaaaa aaaaaaaaaa aaaaaaa
+//
+

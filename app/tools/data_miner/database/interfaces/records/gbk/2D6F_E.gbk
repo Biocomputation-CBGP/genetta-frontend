@@ -1,0 +1,34 @@
+LOCUS       2D6F_E                    74 bp    RNA     linear       01-DEC-2020
+DEFINITION  Chain E, tRNA.
+ACCESSION   2D6F_E
+VERSION     2D6F_E
+KEYWORDS    .
+SOURCE      Unknown.
+  ORGANISM  Unknown.
+            Unclassified.
+REFERENCE   1  (bases 1 to 74)
+  AUTHORS   Oshikane,H., Sheppard,K., Fukai,S., Nakamura,Y., Ishitani,R.,
+            Numata,T., Sherrer,R.L., Feng,L., Schmitt,E., Panvert,M.,
+            Blanquet,S., Mechulam,Y., Soll,D. and Nureki,O.
+  TITLE     Structural basis of RNA-dependent recruitment of glutamine to the
+            genetic code
+  JOURNAL   Science 312 (5782), 1950-1954 (2006)
+   PUBMED   16809540
+REFERENCE   2  (bases 1 to 74)
+  AUTHORS   Nureki,O.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (13-NOV-2005)
+COMMENT     On Oct 4, 2007 this sequence version replaced gi:112490416.
+            Crystal structure of Glu-tRNA(Gln) amidotransferase in the complex
+            with tRNA(Gln).
+FEATURES             Location/Qualifiers
+     source          1..74
+                     /organism="unknown"
+                     /mol_type="other RNA"
+     NonStdRes       1
+                     /non_std_residue="A RNA 5'OH"
+ORIGIN      
+        1 ngtcccgtgg ggtagtggta atcctgctgg gctttggacc cggcgacagc ggttcgactc
+       61 cgctcgggac tacc
+//
+

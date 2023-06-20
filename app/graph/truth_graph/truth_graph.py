@@ -1,4 +1,5 @@
 import json
+
 from app.graph.utility.model.model import model
 from app.graph.design_graph.design_graph import DesignGraph
 from app.graph.truth_graph.modules.synonym import SynonymModule
@@ -6,10 +7,11 @@ from app.graph.truth_graph.modules.derivative import DerivativeModule
 from app.graph.truth_graph.modules.interaction import InteractionModule
 from app.graph.utility.graph_objects.node import Node
 from app.graph.utility.graph_objects.edge import Edge
+from app.graph.utility.graph_objects.reserved_edge import ReservedEdge
+
 p_confidence = str(model.identifiers.external.confidence)
 p_synonym = str(model.identifiers.external.synonym)
 o_pe = model.identifiers.objects.physical_entity
-p_has_sequence = str(model.identifiers.predicates.has_sequence)
 index_name = "truth_index"
 index_labels = ([model.identifiers.objects.synonym] + 
                 [str(k[1]["key"]) for k in model.get_derived(o_pe)])
@@ -35,8 +37,8 @@ class TruthGraph(DesignGraph):
             return
         uedges = []
         for e in edges:
-            if not isinstance(e,Edge):
-                e = Edge(*e)
+            if not isinstance(e,(Edge,ReservedEdge)):
+                e = ReservedEdge(*e)
             e = self._add_edge_gn(e)
             e.update({p_confidence: modifier})
             uedges.append(e)
@@ -47,8 +49,8 @@ class TruthGraph(DesignGraph):
             edges = [edges]
         uedges = []
         for e in edges:
-            if not isinstance(e,Edge):
-                e = Edge(*e)
+            if not isinstance(e,(Edge,ReservedEdge)):
+                e = ReservedEdge(*e)
             e = self._add_edge_gn(e)
             uedges.append(e)
         super().remove_edges(uedges)
@@ -58,7 +60,8 @@ class TruthGraph(DesignGraph):
         return self.driver.submit()
 
     def merge_nodes(self,source,merged):
-        self.driver.merge_node(source,merged)
+        properties = {model.identifiers.external.description:"'combine'"}
+        self.driver.merge_nodes(source,merged,properties=properties)
         return self.driver.submit()
 
     def node_query(self, n=[], **kwargs):
@@ -80,26 +83,6 @@ class TruthGraph(DesignGraph):
                                             wildcard=wildcard,
                                             fuzzy=fuzzy,
                                             threshold=threshold)
-
-    def sequence_query(self,sequence,threshold=None):
-        '''
-        Currently assumes all entities contain actual sequence data.
-        '''
-        results = {}
-        if threshold is None:
-            threshold = 0
-        f_match = self._graph.node_query(**{p_has_sequence:sequence})
-        if len(f_match) != 0:
-            assert(len(f_match) == 1)
-            results[f_match[0]] = 100
-            # Could put in recurisive loop.
-            for derivative in self.derivatives.get(f_match[0]):
-                if derivative.confidence > threshold:
-                    results[derivative.v] = derivative.confidence
-        else:
-            # Either node index OR Iterate over sequences and match locally.
-            pass
-        return results
     
     def drop(self):
         self.driver.drop_graph(self.name)

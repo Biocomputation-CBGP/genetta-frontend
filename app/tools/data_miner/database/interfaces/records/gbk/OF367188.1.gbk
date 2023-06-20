@@ -1,0 +1,36 @@
+LOCUS       OF367188                  29 bp    DNA     linear   PAT 19-JAN-2023
+DEFINITION  KR 1020220052671-A/5: METHANOTROPHS WITH INCREASED ABILITY OF
+            PRODUCING LACTIC ACID.
+ACCESSION   OF367188
+VERSION     OF367188.1
+KEYWORDS    KR 1020220052671-A/5.
+SOURCE      synthetic construct
+  ORGANISM  synthetic construct
+            other sequences; artificial sequences.
+REFERENCE   1  (bases 1 to 29)
+  AUTHORS   Hahn,J.S. and Lee,J.K.
+  TITLE     METHANOTROPHS WITH INCREASED ABILITY OF PRODUCING LACTIC ACID
+  JOURNAL   Patent: KR 1020220052671-A 5 28-APR-2022;
+            Seoul National University R&DB Foundation
+COMMENT     KN   KR 1020200136871-A/5
+            AN   KR 1020200136871
+            AD   2020-10-21
+            PN   KR 1020220052671
+            PD   2022-04-28
+            AT   METHANOTROPHS WITH INCREASED ABILITY OF PRODUCING LACTIC ACID
+            AI   Hahn, Ji Sook|Lee, Jong Kwan
+            AA   Seoul National University R&DB Foundation
+            PR
+            OS   Artificial Sequence
+            TY   DNA
+            CC   tac promoter
+            FH   Key   Location/Qualifiers.
+FEATURES             Location/Qualifiers
+     source          1..29
+                     /organism="synthetic construct"
+                     /mol_type="other DNA"
+                     /db_xref="taxon:32630"
+ORIGIN      
+        1 ttgacaatta atcatcggct cgtataatg
+//
+
