@@ -112,6 +112,7 @@ class TestTruthGraph(unittest.TestCase):
             self.assertFalse(n.get_key() in seen_keys)
             seen_keys.append(n.get_key())
 
+
 class TestModule(unittest.TestCase):
     @classmethod
     def setUpClass(self):

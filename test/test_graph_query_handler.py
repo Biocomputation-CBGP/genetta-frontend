@@ -1,14 +1,16 @@
 import sys
 import os
 import unittest
-import re
+import random
 sys.path.insert(0, os.path.join(".."))
 sys.path.insert(0, os.path.join("..",".."))
 sys.path.insert(0, os.path.join("..","..",".."))
 sys.path.insert(0, os.path.join("..","..","..",".."))
 
 from app.tools.graph_query.handler import GraphQueryHandler
+from app.tools.graph_query.datatype_handlers.sequence import SequenceHandler
 from app.graph.world_graph import WorldGraph
+from app.tools.aligner import aligner
 from app.graph.utility.model.model import model
 from app.graph.utility.graph_objects.reserved_edge import ReservedEdge
 from app.graph.utility.graph_objects.reserved_node import ReservedNode
@@ -381,8 +383,136 @@ class TestGraphQueryHandlerSequence(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self._wg = WorldGraph(uri,db_auth)
-        self._handlers = GraphQueryHandler(self._wg.truth)
+        self._handlers = SequenceHandler(self._wg.truth)
         self._tg = self._wg.truth
 
-    def test_query_seq(self):
-        self._handlers.query("Sequence","ATCG")
+    def test_sequence_query_direct_match(self):
+        d_graph = self._tg.derivatives.get()
+        for entity in self._tg.get_dna():
+            res = self._handlers.handle(entity.hasSequence)
+            self.assertIn(entity.get_key(),res)
+            self.assertIn(entity.get_key(),[e[1]["entity"] for e in 
+                                            res[entity.get_key()]])
+            ders = list(d_graph.derivatives(entity))
+            der_names = [d.v.get_key() for d in ders]
+            for r_entity,d_entities in res.items():
+                self.assertEqual(entity.get_key(),r_entity)
+                for d_entity in d_entities:
+                    if entity.get_key() == d_entity[1]["entity"]:
+                        continue
+                    self.assertIn(d_entity[1]["entity"],der_names)
+                    e_conf = [e.confidence for e in ders if 
+                              e.v.get_key() == d_entity[1]["entity"]][0]
+                    self.assertEqual(d_entity[0], e_conf)
+
+    def test_sequence_query_partial_match(self):
+        for entity in self._tg.get_dna():
+            # Sample, the full dataset is quite big.
+            if random.randint(0,500) != 1:
+                continue
+            diff = random.randint(0, 100)    
+            ms = make_random_changes(entity.hasSequence,diff)
+            res = self._handlers.handle(ms)
+            if len(res) == 0:
+                score = int(aligner.sequence_match(entity.hasSequence,ms)*100)
+                self.assertGreaterEqual(self._handlers._threshold,score)
+            if diff == 0:
+                self.assertIn(entity.get_key(),res)
+                self.assertIn(entity.get_key(),[e[1]["entity"] for e in 
+                                                res[entity.get_key()]])
+                continue
+            for source,d_entities in res.items():
+                self.assertEqual(source,None)
+                for score,entity in d_entities:
+                    self.assertGreaterEqual(score,self._handlers._threshold)
+
+    def test_feedback_indirect_match(self):
+        source = None
+        result = "https://synbiohub.org/public/igem/BBa_K1676024/1"
+        self._handlers.feedback(source,result)
+        pre_graph = self._tg.derivatives.get(result,threshold=5)
+        pre_edges = list(pre_graph.derivatives())
+        try:
+            pre_conf = [e.confidence for e in pre_edges if e.v.get_key() == result][0]
+        except IndexError:
+            pre_conf = 0
+
+        self._handlers.feedback(source,result)
+        post_graph = self._tg.derivatives.get(result,threshold=5)
+        post_edges = list(post_graph.derivatives())
+        diff = list(set(post_edges) - set(pre_edges))
+        self.assertEqual(len(diff), 0)
+        for e in post_edges:
+            if e.v.get_key() == result:
+                self.assertEqual(e.confidence,pre_conf)
+
+    def test_feedback_identical(self):
+        source = "https://synbiohub.org/public/igem/BBa_K1676024/1"
+        result = "https://synbiohub.org/public/igem/BBa_K1676024/1"
+        self._handlers.feedback(source,result)
+        pre_graph = self._tg.derivatives.get(result,threshold=5)
+        pre_edges = list(pre_graph.derivatives())
+        try:
+            pre_conf = [e.confidence for e in pre_edges if e.v.get_key() == result][0]
+        except IndexError:
+            pre_conf = 0
+
+        self._handlers.feedback(source,result)
+        post_graph = self._tg.derivatives.get(result,threshold=5)
+        post_edges = list(post_graph.derivatives())
+        diff = list(set(post_edges) - set(pre_edges))
+        self.assertEqual(len(diff), 0)
+        for e in post_edges:
+            if e.v.get_key() == result:
+                self.assertEqual(e.confidence,pre_conf)
+
+    def test_feedback_direct_match(self):
+        source = "https://synbiohub.org/public/igem/BBa_J34801/1"
+        result = "https://synbiohub.org/public/igem/BBa_K1676030/1"
+        pre_graph = self._tg.derivatives.get(result,threshold=5)
+        pre_edges = list(pre_graph.derivatives())
+        try:
+            pre_conf = [e.confidence for e in pre_edges if e.n.get_key() == result][0]
+        except IndexError:
+            pre_conf = 0
+
+        self._handlers.feedback(source,result)
+        post_graph = self._tg.derivatives.get(result,threshold=5)
+        post_edges = list(post_graph.derivatives())
+        diff = list(set(post_edges) - set(pre_edges))
+        self.assertEqual(len(diff), 0)
+        for e in post_edges:
+            if e.v.get_key() == source:
+                self.assertEqual(e.confidence,pre_conf + self._tg.derivatives._standard_modifier)
+
+
+
+
+
+        pre_graph = self._tg.derivatives.get(result,threshold=5)
+        pre_edges = list(pre_graph.derivatives())
+        try:
+            pre_conf = [e.confidence for e in pre_edges if e.n.get_key() == result][0]
+        except IndexError:
+            pre_conf = 0
+
+        self._handlers.feedback(source,result,positive=False)
+        post_graph = self._tg.derivatives.get(result,threshold=5)
+        post_edges = list(post_graph.derivatives())
+        diff = list(set(post_edges) - set(pre_edges))
+        self.assertEqual(len(diff), 0)
+        for e in post_edges:
+            if e.v.get_key() == source:
+                self.assertEqual(e.confidence,pre_conf - self._tg.derivatives._standard_modifier)
+
+
+def make_random_changes(sequence, percentage):
+    num_changes = int(len(sequence) * percentage / 100)
+    seq_list = list(sequence)
+    indices = random.sample(range(len(sequence)), num_changes)
+    for index in indices:
+        current_base = seq_list[index]
+        new_base = random.choice('ACGT'.replace(current_base, ''))
+        seq_list[index] = new_base
+    modified_sequence = ''.join(seq_list)
+    return modified_sequence
