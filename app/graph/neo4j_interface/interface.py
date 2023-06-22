@@ -85,7 +85,6 @@ class Neo4jInterface:
                 if new_props == {} or list(new_props.keys()) == ["name"]:
                     continue
                 self.qry_builder.add_match_node(q_node)
-                print(n.properties)
                 self.qry_builder.add_set_node(n, new_props)
                 return n
         else:
@@ -159,9 +158,19 @@ class Neo4jInterface:
         self.qry_builder.add_match_edge(edge)
         self.qry_builder.add_replace_edge_properties(edge, new_properties)
 
-    def replace_node_property(self, node, new_properties):
-        self.qry_builder.add_match_node(node)
-        self.qry_builder.add_replace_node_properties(node, new_properties)
+    def replace_node_property(self,old,new):
+        if "graph_name" in new.properties:
+            gn_change = list(set(new.properties["graph_name"]) - 
+                             set(old.properties["graph_name"]))
+        else:
+            gn_change = []
+        self.qry_builder.add_match_node(old)
+        self.qry_builder.add_replace_node_properties(old, old.properties.copy())
+        for gn in gn_change:
+            if self.logger is not None:
+                self.logger.replace_node_property(old,new.properties,[gn])
+                self.logger.replace_node(old,new,[gn])
+                    
 
     def set_edge(self, edge, new_properties):
         self.qry_builder.add_match_edge(edge)
@@ -383,7 +392,9 @@ class Neo4jInterface:
             print("WARN:: No connection to neo4j graph.")
         return self.driver.run_cypher(cypher_str)
 
-    def _node(self, name, ntype=None, properties={}):
+    def _node(self, name, ntype=None, properties=None):
+        if properties is None:
+            properties = {}
         if isinstance(name, Node):
             n = name
             n.update(properties)
@@ -399,6 +410,8 @@ class Neo4jInterface:
             n = self.qry_builder.nodes[n].graph_object
             if n.type == "None":
                 n.type = on.type
+            if "graph_name" in properties:
+                del properties["graph_name"]
             n.update(properties)
         return n
 

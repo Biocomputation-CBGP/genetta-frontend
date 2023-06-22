@@ -80,6 +80,7 @@ class Edge:
 
     def _update(self,items):
         for k,v in items.items():
+            k = str(k)
             if validators.url(k):
                 setattr(self,_get_name(k),v)
             elif isinstance(v,(set,list,tuple)) and hasattr(self,_get_name(k)):

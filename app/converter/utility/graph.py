@@ -51,6 +51,12 @@ class SBOLGraph:
             self._remove_triples([(s,p,o)])
             self._add_triples([(s,p,BNode(new))])
 
+
+    def replace_object(self,old,new):
+        self.replace_uri(old,new)
+        self.replace_property(new,identifiers.predicates.persistent_identity,_get_pid(new))
+        self.replace_property(new,identifiers.predicates.display_id,Literal(_get_name(new)))
+
     def replace_sequence(self,subject,seq):
         seqs = self.get_sequence_names(subject)
         if len(seqs) == 0:
@@ -83,6 +89,7 @@ class SBOLGraph:
     def replace_definition(self,component,old,new):
         self.replace_triple((component,identifiers.predicates.definition,old),
                             (component,identifiers.predicates.definition,new))
+
 
     def get_all_instances(self):
         return [i[0] for i in self.graph.get_instances()]
@@ -403,7 +410,8 @@ class SBOLGraph:
         triples = [(uri,RDF.type,type)]
         triples.append((uri,identifiers.predicates.persistent_identity,_get_pid(uri)))
         triples.append((uri,identifiers.predicates.display_id,Literal(_get_name(uri))))
-        triples.append((uri,identifiers.predicates.version,Literal(1)))
+        if self.search((uri,identifiers.predicates.version,None)) == []:
+            triples.append((uri,identifiers.predicates.version,Literal(1)))
         return triples
 
     def add_sequence(self,uri,sequence,encoding):
@@ -412,11 +420,11 @@ class SBOLGraph:
         triples.append((uri,identifiers.predicates.encoding,encoding))
         self._add_triples(triples)
         
-    def add_component_definition(self,uri,type,role=None,components=[],sas=[],sequence=None,properties={}):
+    def add_component_definition(self,uri,etype,role=None,components=[],sas=[],sequence=None,properties={}):
         if not isinstance(uri,URIRef):
             uri = URIRef(uri)
         triples = self._generic_generation(uri,identifiers.objects.component_definition)
-        triples.append((uri,identifiers.predicates.type,type))
+        triples.append((uri,identifiers.predicates.type,etype))
         if role is not None:
             triples.append((uri,identifiers.predicates.role,role))
         if sequence is not None:
@@ -427,6 +435,11 @@ class SBOLGraph:
         for sa in sas:
             triples.append((uri,identifiers.predicates.sequence_annotation,URIRef(sa)))
         for k,v in properties.items():
+            int_res = self.search((uri,URIRef(k),None))
+            if int_res != []:
+                self.remove_triple(int_res[0])
+                int_res = int_res[0][2]
+                v = int_res + [str(v)]
             triples.append((uri,URIRef(k),v))
         self._add_triples(triples)
 
@@ -594,11 +607,7 @@ class SBOLGraph:
         return URIRef(self.build_children_uri(int,f'{_get_name(cd)}_{_get_name(part_type)}'))
 
     def save(self,out_fn):
-        pysbolG = SBOL2Graph()
-        pysbolG += self.graph.graph
-        s = serialize_sboll2(pysbolG).decode("utf-8")
-        with open(out_fn, 'w') as o:
-            o.write(s)
+        self.graph.graph.serialize(destination=out_fn,format="xml")  
 
 
 def _get_pid(subject):

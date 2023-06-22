@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join("..","..","..",".."))
 from app.graph.world_graph import WorldGraph
 from app.tools.enhancer.enhancer import Enhancer
 from app.converter.sbol_convert import convert
+from app.converter.sbol_convert import export
 from app.graph.utility.graph_objects.node import Node
 from app.graph.utility.model.model import model
 
@@ -165,9 +166,22 @@ class TestEnhancer(unittest.TestCase):
         expected = (Node("https://synbiohub.programmingbiology.org/public/Eco1C1G1T1/TetR/1",
                          nv_cds), 50)
         res = [(k,v) for k,v in self.canonicaliser._get_external_potential(node,t_pes).items()]
-        for k,v in res:
-            print(k,v)
         self.assertIn(expected,res)
+
+
+    def _apply_canonical_test(self,subj,obj):
+        res = self.wg.truth.synonyms.get(subj.get_key())
+        for r in res.edges():
+            if obj == r.v.get_key():
+                break
+        else:
+            self.fail()
+
+        self.wg.truth.synonyms.negative(subj,obj)
+        res = self.wg.truth.synonyms.get(subj.get_key())
+        for r in res.edges():
+            if obj == r.v.get_key():
+                self.fail()
 
 
     def test_apply(self):
@@ -180,7 +194,7 @@ class TestEnhancer(unittest.TestCase):
         test_key = "test_key123"
         t_seq = "ATCG"
         replacements = {subj.get_key():[test_key,subj.get_type(),{nv_has_seq:t_seq}]}
-        self.canonicaliser.apply(replacements,self.gn)
+        replacements = self.canonicaliser.apply(replacements,self.gn)
 
         for e in e_graph.get_physicalentity():
             if test_key == e.get_key():
@@ -190,6 +204,7 @@ class TestEnhancer(unittest.TestCase):
         else:
             self.fail()
 
+        self._apply_canonical_test(subj,test_key)
         replacements = {test_key:[subj.get_key(),subj.get_type(),{nv_has_seq:subj.hasSequence}]}
         self.canonicaliser.apply(replacements,self.gn)
         for e in e_graph.get_physicalentity():
@@ -198,6 +213,7 @@ class TestEnhancer(unittest.TestCase):
                 break
         else:
             self.fail()
+        self._apply_canonical_test(subj,test_key)
 
 
     def test_apply_overlap(self):
@@ -224,7 +240,7 @@ class TestEnhancer(unittest.TestCase):
                 break
         else:
             self.fail()
-        
+        self._apply_canonical_test(subj,test_key)
         replacements = {test_key:[subj.get_key(),subj.get_type(),{nv_has_seq:subj.hasSequence}]}
         self.canonicaliser.apply(replacements,self.gn)
         for e in e_graph.get_physicalentity():
@@ -234,10 +250,11 @@ class TestEnhancer(unittest.TestCase):
         else:
             self.fail()
 
+        self._apply_canonical_test(subj,test_key)
         post_all_edges = e_graph.edges()
         self.assertCountEqual(all_edges,post_all_edges)
 
-        subj.properties["graph_name"] += ["test_apply_overlap"]
+        subj.properties["graph_name"] = e_graph.name +["test_apply_overlap"]
         self.wg.driver.remove_node(subj)
         self.wg.driver.submit()
 
@@ -282,8 +299,26 @@ class TestEnhancer(unittest.TestCase):
             edges = e_graph.edges(v=res[0])
             self.assertEqual(len(edges),1)
 
+            syns = self.wg.truth.synonyms.get(v.get_key())
+            ders = self.wg.truth.derivatives.get(v.get_key())
+            for r in syns.edges():
+                if k == r.v.get_key():
+                    break
+            else:
+                for d in ders.edges():
+                    if k == d.v.get_key():
+                        break
+                else:
+                    self.fail(f'{k} {v}')
+            
+        for k,v in replacements.items():
+            self.wg.truth.synonyms.negative(k,v)
+            self.wg.truth.derivatives.negative(k,v)
+
 
     def test_canonicalise_automated(self):
+        pre_tg_e = self.wg.truth.edges()
+        pre_tg_n = self.wg.truth.nodes()
         changes = self.enhancer.canonicalise(self.gn)
         expected_dict = {
             "https://synbiohub.org/public/igem/BM3R1_repressor/1" : ["https://synbiohub.programmingbiology.org/public/Cello_Parts/BM3R1/1"],
@@ -318,9 +353,31 @@ class TestEnhancer(unittest.TestCase):
             self.assertEqual(res[0].get_key(),v.get_key())
             edges = e_graph.edges(v=res[0])
             self.assertEqual(len(edges),1)
+
+            syns = self.wg.truth.synonyms.get(v.get_key())
+            ders = self.wg.truth.derivatives.get(v.get_key())
+            for r in syns.edges():
+                if k == r.v.get_key():
+                    break
+            else:
+                for d in ders.edges():
+                    if k == d.v.get_key():
+                        break
+                else:
+                    self.fail(f'{k} {v}')
+        
+        post_tg_e = self.wg.truth.edges()
+        diff_tg_e = list(set(post_tg_e) - set(pre_tg_e))
+        self.wg.truth.remove_edges(diff_tg_e)
+
+        post_tg_n = self.wg.truth.nodes()
+        diff_tg_n = list(set(post_tg_n) - set(pre_tg_n))
+        for tg_n in diff_tg_n:
+            self.wg.truth.remove_node(tg_n)
         
 
     def test_canonicalise_manual(self):
+        pre_tg = self.wg.truth.edges()
         changes = self.enhancer.canonicalise(self.gn,automated=False)
         expected_dict = {
             "https://synbiohub.org/public/igem/my_rbs/1" : [("https://synbiohub.programmingbiology.org/public/Cello_Parts/B3/1",94)],
@@ -353,7 +410,6 @@ class TestEnhancer(unittest.TestCase):
         self.enhancer.apply_canonicalise(feedback,self.gn)
         e_graph = self.wg.get_design(self.gn)
         for k,v in feedback.items():
-            print(k,v)
             self.assertEqual(e_graph.nodes(k),[])
             res = e_graph.nodes(v)
             self.assertEqual(len(res),1)
@@ -361,21 +417,25 @@ class TestEnhancer(unittest.TestCase):
             edges = e_graph.edges(v=res[0])
             self.assertEqual(len(edges),1)
 
-
-    def test_canonicalise_export(self):
-        #gn = "test_canonicalise_export_ind"
-        #t_fn = os.path.join("files","test_canonicalise_export.xml")
-        #convert(t_fn,self.wg.driver,gn)
-        gn = "test_canonicalise_export"
-        convert(fn,self.wg.driver,gn)
-
-        return
-        changes = self.enhancer.canonicalise(self.gn,automated=False)
-        feedback = {k:o[0][0] for k,o in changes.items()}
-        self.enhancer.apply_canonicalise(feedback,self.gn)
+            syns = self.wg.truth.synonyms.get(v.get_key())
+            ders = self.wg.truth.derivatives.get(v.get_key())
+            for r in syns.edges():
+                if k == r.v.get_key():
+                    break
+            else:
+                for d in ders.edges():
+                    if k == d.v.get_key():
+                        break
+                else:
+                    self.fail(f'{k} {v}')
+            
+        post_tg = self.wg.truth.edges()
+        diff_tg = list(set(post_tg) - set(pre_tg))
+        self.wg.truth.remove_edges(diff_tg)
 
         
     def test_enhance_automated(self):
+        # AQUI
         self.enhancer.enhance(self.gn,automated=False)
 
 

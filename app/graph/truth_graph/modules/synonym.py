@@ -49,6 +49,12 @@ class SynonymModule(AbstractModule):
                 edge = self._cast_edge(subject,synonym,p_synonym,name="Synonym")
                 self._add_new_edge(edge,confidence=score)
                 return edge
+        syn_node = self._tg.node_query(synonym)
+        # The synonym node may already be in the 
+        # network as a canonical, just reverse.
+        if len(syn_node) > 0 and syn_node[0].get_type() != o_synonym:
+            return self.positive(synonym.get_key(),subject.get_key(),
+                                 score)
         # Add new edge
         # Even where the synonym node may exist 
         # already we still add the node.
@@ -61,7 +67,9 @@ class SynonymModule(AbstractModule):
         # Same as positive but without adding any new edges.
         subject = self._cast_node(subject)
         synonym = self._cast_node(synonym)
+        print(subject)
         res = self._tg.edge_query(subject,e=p_synonym)
+        print(res)
         if len(res) != 0:
             for edge in res:
                 if synonym.get_key() == edge.v.get_key():

@@ -87,17 +87,30 @@ class Canonicaliser(AbstractEnhancement):
             return self.apply(changes,graph_name)
         return changes
 
+
+    
+
     def apply(self,replacements,graph_name):
         dg = self._wg.get_design(graph_name)
         for old,new in replacements.items():
-            if isinstance(new,Node):
-                n_key = new.get_key()
-                n_type = new.get_type()
-                n_props = new.properties
-            else:
-                n_key,n_type,n_props = new
+            if not isinstance(new,Node):
+                new = Node(new[0],new[1],**new[2])
+                replacements[old] = new
 
-            dg.replace_node(old,n_key,n_props)
+            old_gn = dg.nodes(old)            
+            if (hasattr(new,"hasSequence") and 
+                len(old_gn) > 0 and 
+                hasattr(old_gn[0],"hasSequence")):
+                n_s = new.hasSequence
+                o_s = old_gn[0].hasSequence
+                score = int(aligner.sequence_match(n_s,o_s)*100)
+                if score > self._match_threshold and score != 100:
+                    self._wg.truth.derivatives.positive(new,old_gn[0],score)
+                else:
+                    self._wg.truth.synonyms.positive(new,old)
+            else:
+                self._wg.truth.synonyms.positive(new,old)
+            dg.replace_node(old,new.get_key(),new.properties)
         return replacements
 
     def _get_truth_absolute(self,entity,t_pes):
@@ -111,7 +124,7 @@ class Canonicaliser(AbstractEnhancement):
             # 1. Entity is directly in the network.
             return res,100
         if hasattr(entity,"hasSequence"):
-            seq_props = {nv_has_sequence : entity.hasSequence.upper()}
+            seq_props = {str(nv_has_sequence) : entity.hasSequence.upper()}
             res = self._wg.truth.node_query(**seq_props)
             if len(res) != 0:
                 # 3. Entity has a direct sequence match in the network.

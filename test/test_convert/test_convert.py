@@ -63,6 +63,23 @@ class TestConvert(unittest.TestCase):
         self.assertCountEqual(ints,s_i)
         dg.drop()
 
+    def test_sbol_sequence(self):
+        fn1 = os.path.join("..","files","convert_sequence.xml")
+        sg1 = SBOLGraph(fn1)
+        gn1 = "sb1"
+        graph = WorldGraph(uri,db_auth,reserved_names=[login_graph_name])
+        sb_convert(fn1,graph.driver,gn1)
+        dg1 = graph.get_design([gn1])
+        s_cds = sg1.get_component_definitions()
+        for pe in dg1.get_physicalentity():
+            for cd in s_cds:
+                if str(cd) == str(pe.get_key()):
+                    if len(sg1.get_sequence_names(cd)) > 0:
+                        self.assertTrue(hasattr(pe,"hasSequence"))
+                    break
+            else:
+                self.fail()
+        dg1.drop()
 
     def test_sbol_overlap(self):
         fn1 = os.path.join("..","files","sbol_overlap1.xml")
@@ -82,7 +99,6 @@ class TestConvert(unittest.TestCase):
         self.assertCountEqual(pes,s_cds)
         dg1.drop()
         dg2.drop()
-
     
     def test_gbk(self):
         fn = os.path.join("..","files","nor_reporter.gb")

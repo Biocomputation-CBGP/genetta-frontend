@@ -86,6 +86,7 @@ class Node:
 
     def _update(self,items):
         for k,v in items.items():
+            k = str(k)
             up = urlparse(k)
             if up.netloc != "":
                 setattr(self,_get_name(k),v)

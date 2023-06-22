@@ -1,3 +1,4 @@
+from rdflib import URIRef
 from app.converter.utility.identifiers import identifiers
 from app.tools.data_miner.graph_analyser.utility.graph import SBOLGraph
 from app.graph.utility.model.model import model
@@ -41,6 +42,7 @@ class GraphAnalyser:
             key = self.get_subject(graph,fragments)
         if key is None:
             return None
+        key = URIRef(key)
         cd_types = graph.get_types(key)
         properties = ([(nv_characteristic, physical_entity)] +
                     [(nv_role, r) for r in (graph.get_roles(key) + cd_types)])

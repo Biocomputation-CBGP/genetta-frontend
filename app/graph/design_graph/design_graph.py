@@ -148,10 +148,10 @@ class DesignGraph:
         
         def _swap_edges(old_res,new_res):
             for edge in self.edges(n=old_res):
-                _new_edge(new_res,edge.v,edge.get_type(),edge.properties)
+                _new_edge(new_res,edge.v,edge.get_type(),edge.properties.copy())
                 _replace_edge_properties(edge)
             for edge in self.edges(v=old_res):
-                _new_edge(edge.n,new_res,edge.get_type(),edge.properties)
+                _new_edge(edge.n,new_res,edge.get_type(),edge.properties.copy())
                 _replace_edge_properties(edge)
 
 
@@ -169,11 +169,12 @@ class DesignGraph:
         if len(new_res) > 0:
             assert(len(new_res) == 1)
             new_res = new_res[0]
+            # Add graph name to existing node
             if len(list(set(self.name) & set(new_res.graph_name))) == 0:
-                new_props = new_res.properties
-                new_props["graph_name"] += self.name
-                self.driver.replace_node_property(res,new_props)
+                new_res.properties["graph_name"] += self.name
+                self.driver.replace_node_property(res,new_res)
             _swap_edges(res,new_res)
+            # Remove old node
             if res.graph_name == self.name:
                 self.driver.remove_node(res)
             self.driver.submit()
@@ -185,8 +186,8 @@ class DesignGraph:
         else:
             new = self.driver.add_node(key,res.get_type(),**properties)
             _swap_edges(res,new)
-            props = _remove_gn(res.properties)
-            self.driver.replace_node_property(res,props)
+            res.properties = _remove_gn(res.properties)
+            self.driver.replace_node_property(res,new)
             self.driver.submit()
         
     def replace_label(self,old,new):

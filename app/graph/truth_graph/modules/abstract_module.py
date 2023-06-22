@@ -51,12 +51,18 @@ class AbstractModule(ABC):
         edge = ReservedEdge(n,v,e,graph_name=self._tg.name,**kwargs)
         return edge
         
-    def _cast_node(self,subject,n_type=None):
+    def _cast_node(self,subject,n_type=None,props=None):
+        if props is None:
+            props = {}
         if not isinstance(subject,ReservedNode):
             if isinstance(subject,Node):
                 n_type = subject.get_type()
+                props = subject.properties
                 subject = subject.get_key()
-            subject = ReservedNode(subject,n_type,graph_name=self._tg.name)
+                if "graph_name" in props:
+                    del props["graph_name"]
+            subject = ReservedNode(subject,n_type,
+                                   graph_name=self._tg.name,**props)
         subject.properties["graph_name"] = self._tg.name
         subject.graph_name = self._tg.name
         return subject

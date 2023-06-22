@@ -118,12 +118,16 @@ def export(fn, gn, logger):
     for change in changes:
         g = c_dict[change["action"]][change["type"]](change, g)
     g = _handle_deferals(g)
+    '''
+    g.prune_duplicates()
     pysbolG = SBOL2Graph()
     pysbolG += g
     sbol = serialize_sboll2(pysbolG).decode("utf-8")
 
     with open(fn, 'w') as o:
-        o.write(sbol)    
+        o.write(sbol)
+    '''
+    g.save(fn)    
     logger.remove_graph(gn)
     return fn
 
@@ -218,7 +222,7 @@ def _replace_node(change, graph):
     pred = change["predicate"]
     obj = change["object"]
     if pred == "uri":
-        graph.replace_uri(subj,URIRef(obj))
+        graph.replace_object(subj,URIRef(obj))
     elif URIRef(pred) == nv_hasSequence:
         graph.replace_sequence(subj,Literal(obj))
     elif URIRef(pred) == DCTERMS.description:
@@ -356,12 +360,6 @@ def _map_entities(cd, sbol_graph, model):
 
 def _get_properties(entity, graph, graph_name):
     properties = {}
-    if isinstance(entity, URIRef):
-        properties["dtype"] = "URI"
-    elif isinstance(entity, BNode):
-        properties["dtype"] = "BNode"
-    else:
-        properties["dtype"] = "Literal"
     meta = graph.get_metadata(entity)
     properties["name"] = _get_name(entity)
     properties["graph_name"] = [graph_name]
