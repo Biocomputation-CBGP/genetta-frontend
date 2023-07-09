@@ -1,6 +1,8 @@
 import os
 from app.tools.data_miner.data_miner import data_miner
 from app.tools.enhancer.enhancements.canonicaliser import Canonicaliser
+from app.tools.enhancer.enhancements.tg_interactions import TruthInteractions
+from app.tools.enhancer.enhancements.text_extraction import TextExtraction
 tg_initial_fn = os.path.join(os.path.dirname(os.path.realpath(__file__)),"seeder","tg_initial.json")
 
 class Enhancer:
@@ -8,7 +10,8 @@ class Enhancer:
         self._graph = graph
         self._miner = data_miner
         self._canonicaliser = Canonicaliser(graph,self._miner)
-        self._enhancers = []
+        self._enhancers = [TruthInteractions(graph,self._miner),
+                           TextExtraction(graph,self._miner)]
     
     def get_canonical_entity(self,entity,gn):
         print("get_canonical_entity not implemented.")

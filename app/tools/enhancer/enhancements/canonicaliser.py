@@ -126,7 +126,7 @@ class Canonicaliser(AbstractEnhancement):
         if hasattr(entity,"hasSequence"):
             seq_props = {str(nv_has_sequence) : entity.hasSequence.upper()}
             res = self._wg.truth.node_query(**seq_props)
-            if len(res) != 0:
+            if len(res) != 0:   
                 # 3. Entity has a direct sequence match in the network.
                 assert(len(res) == 1)
                 return res[0],100
@@ -259,46 +259,4 @@ class Canonicaliser(AbstractEnhancement):
         syn = list(syn.synonyms(synonym=synonym))
         assert(len(syn) == 1)
         return syn[0].n,syn[0].confidence
-
-
-    def _post_rank(self,entity,potentials,dg,parent=None):
-        '''
-        Rankings such as neighbourhood similarity may perform 
-        better when other entities have been canonicalised.
-        This methods implements these rankings.
-        Rankings will only change with Automated and 
-        on potential references.
-        '''
-        def _add_confidence(node,row):
-            new_c = potentials[node]["score"] + row["similarity"]
-            if new_c > 0:
-                new_c = 1.0
-            potentials[node]["score"] = new_c
-            
-        gn = str(uuid.uuid4())
-        if parent is not None:
-            fn = self._miner.get(parent)
-            if fn is not None:
-                convert(fn,self._wg.driver,gn)
-        for p in potentials:
-            fn = self._miner.get(p)
-            convert(fn,self._wg.driver,gn)
-        p_gn = str(uuid.uuid4())
-        dg = self._wg.get_design(dg.name + [gn])
-        dg.project.hierarchy(p_gn,direction="UNDIRECTED")
-        res = dg.procedure.node_similarity(p_gn)
-        seen_combos = []
-        for r in res:
-            n1 = r["node1"].get_key()
-            n2 = r["node2"].get_key()
-            if {n1,n2} in seen_combos:
-                continue
-            seen_combos.append({n1,n2})
-            if n1 == entity and n2 in potentials:
-                _add_confidence(n2,r)
-            if n2 == entity and n1 in potentials:
-                _add_confidence(n1,r)
-        dg.project.drop(p_gn)
-        self._wg.remove_design(gn)
-        return potentials
         

@@ -22,10 +22,11 @@ class AbstractEnhancement(ABC):
         return f'{self._get_prefix(original)}_{it_name}/1'
 
     def _potential_change(self,cur_changes,subject,option,score,
-                          comment,enabled=False):
+                          comment):
         i_dict = {"score" : score,
-                  "comment" : comment,
-                  "apply" : enabled}
+                  "comment" : comment}
+        subject = str(subject)
+        option = str(option)
         if subject in cur_changes:
             cur_changes[subject][option] = i_dict
         else:
