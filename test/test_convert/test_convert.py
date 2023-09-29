@@ -121,10 +121,74 @@ class TestConvert(unittest.TestCase):
         gb_convert(fn,graph.driver,gn)
         dg = graph.get_design(gn)
         pes = dg.get_physicalentity()
-        for p in pes:
-            print(p)
         root = pes.pop(0)
         for e in dg.get_haspart(root):
             self.assertEqual(root,e.n)
             self.assertIn(e.v,pes)
         dg.drop()
+
+    def test_sbol_positional_relative(self):
+        fn = os.path.join("..","files","canonical_AND.xml")
+        sbol_graph = SBOLGraph(fn)
+        gn = "test_sbol_positional_relative"
+        graph = WorldGraph(uri,db_auth,reserved_names=[login_graph_name])
+        sb_convert(fn,graph.driver,gn)
+        dg = graph.get_design(gn)
+        
+
+        s_cds = [str(s) for s in sbol_graph.get_component_definitions()]
+        pes = [p.get_key() for p in dg.get_physicalentity()]
+        self.assertCountEqual(pes,s_cds)
+
+        s_i = [str(s) for s in sbol_graph.get_interactions()]
+        ints = [p.get_key() for p in dg.get_interaction()]
+        self.assertCountEqual(ints,s_i)
+
+        positions = dg.get_position()
+        seen_pos = []
+        for p in positions:
+            po = dg.get_positionof(p)
+            nex = dg.get_next(p)
+            self.assertEqual(len(po),1)
+            po = po[0]
+            self.assertNotIn(po.v,seen_pos)
+            seen_pos.append(po.v)
+            if len(nex) > 0:
+                self.assertEqual(len(nex),1)
+                nex = nex[0]
+                self.assertEqual(nex.n.get_type(),nex.v.get_type())
+            else:
+                self.assertEqual(len(nex),0)
+
+    def test_sbol_absolute(self):
+        fn = os.path.join("..","files","0xF6.xml")
+        sbol_graph = SBOLGraph(fn)
+        gn = "test_sbol_absolute"
+        graph = WorldGraph(uri,db_auth,reserved_names=[login_graph_name])
+        sb_convert(fn,graph.driver,gn)
+        dg = graph.get_design(gn)
+        
+
+        s_cds = [str(s) for s in sbol_graph.get_component_definitions()]
+        pes = [p.get_key() for p in dg.get_physicalentity()]
+        self.assertCountEqual(pes,s_cds)
+
+        s_i = [str(s) for s in sbol_graph.get_interactions()]
+        ints = [p.get_key() for p in dg.get_interaction()]
+        self.assertCountEqual(ints,s_i)
+
+        positions = dg.get_position()
+        seen_pos = []
+        for p in positions:
+            po = dg.get_positionof(p)
+            nex = dg.get_next(p)
+            self.assertEqual(len(po),1)
+            po = po[0]
+            self.assertNotIn(po.v,seen_pos)
+            seen_pos.append(po.v)
+            if len(nex) > 0:
+                self.assertEqual(len(nex),1)
+                nex = nex[0]
+                self.assertEqual(nex.n.get_type(),nex.v.get_type())
+            else:
+                self.assertEqual(len(nex),0)

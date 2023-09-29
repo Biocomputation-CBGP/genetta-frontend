@@ -38,7 +38,7 @@ class TestDerivativeExpansion(unittest.TestCase):
     def test_derivative_expansion(self):
         ppe = TruthDerivative(self.tg,data_miner)
         pre_e = self.tg.edges()
-        ppe.enhance()
+        ppe.expand()
         post_e = self.tg.edges()
         diff = list(set(post_e) - set(pre_e))
         g_graph = self.tg.derivatives.get()
@@ -53,19 +53,19 @@ class TestDerivativeExpansion(unittest.TestCase):
         for d in g_graph.derivatives():
             d = d.n
             d_is = []
-            for i in i_graph.interactions(entity=d):
+            for i in i_graph.interactions(participant=d):
                 d_is.append(set([i.get_type()] + 
                                 [i.v for i in i_graph.interaction_elements(i)  if i.v != d]))
             for dd in g_graph.derivatives(d):
                 dd = dd.v
                 dd_is = []
-                for dd_i in i_graph.interactions(entity=dd):
+                for dd_i in i_graph.interactions(participant=dd):
                     dd_is.append(set([dd_i.get_type()] + 
                                      [i.v for i in i_graph.interaction_elements(dd_i) if i.v != dd]))
             self.assertCountEqual(d_is,dd_is)
 
         pre_e = self.tg.edges()
-        ppe.enhance()
+        ppe.expand()
         post_e = self.tg.edges()
         diff = list(set(post_e) - set(pre_e))
         self.assertEqual(len(diff),0)

@@ -170,6 +170,32 @@ class TruthVisual(AbstractDesignVisual):
                             self.set_bezier_edge_shape]
         return self._set_preset(preset_functions)
     
+    def set_module_preset(self):
+        '''
+        Pre-set methods with an affinity for displaying the module view.
+        '''
+        preset_functions = [self.set_network_mode,
+                            self.set_module_view,
+                            self.set_klay_layout,
+                            self.add_type_edge_color,
+                            self.add_type_node_color,
+                            self.add_node_name_labels,
+                            self.add_edge_no_labels,
+                            self.add_standard_node_size,
+                            self.set_circle_node_shape,
+                            self.set_bezier_edge_shape]
+        return self._set_preset(preset_functions)
+    
+    def set_module_view(self):
+        '''
+        Sub graph viewing only the provenances edges, 
+        displaying parts which have a level of sequence similarity.
+        '''
+        if self.view == self.set_module_view:
+            self._builder.set_module_view()
+        else:
+           self.view =self.set_module_view
+
     def set_provenance_view(self):
         '''
         Sub graph viewing only the provenances edges, 

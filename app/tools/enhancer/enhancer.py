@@ -2,7 +2,8 @@ import os
 from app.tools.data_miner.data_miner import data_miner
 from app.tools.enhancer.enhancements.canonicaliser import Canonicaliser
 from app.tools.enhancer.enhancements.tg_interactions import TruthInteractions
-from app.tools.enhancer.enhancements.text_extraction import TextExtraction
+from app.tools.enhancer.enhancements.protein_production import ProteinProduction
+from app.tools.enhancer.enhancements.positional import Positional
 tg_initial_fn = os.path.join(os.path.dirname(os.path.realpath(__file__)),"seeder","tg_initial.json")
 
 class Enhancer:
@@ -10,8 +11,9 @@ class Enhancer:
         self._graph = graph
         self._miner = data_miner
         self._canonicaliser = Canonicaliser(graph,self._miner)
-        self._enhancers = [TruthInteractions(graph,self._miner),
-                           TextExtraction(graph,self._miner)]
+        self._enhancers = [ProteinProduction(graph,self._miner),
+                        TruthInteractions(graph,self._miner),
+                        Positional(graph,self._miner)]
     
     def get_canonical_entity(self,entity,gn):
         print("get_canonical_entity not implemented.")
@@ -29,10 +31,16 @@ class Enhancer:
         if len(self._enhancers) == 0:
             return res
         for e in self._enhancers:
-            res[e.name] = e.enhance(graph_name,automated=automated)
+            enhancements = e.enhance(graph_name,automated=automated)
+            if len(enhancements) > 0:
+                res[e.name] = enhancements
         return res
     
     def apply_enhance(self,replacements,graph_name):
-        for evaluator in self._enhancers:
-            evaluator.apply(graph_name,replacements)
+        changes = {}
+        for k,v in replacements.items():
+            for enhancer in self._enhancers:
+                if k == enhancer.name:
+                    changes[k] = enhancer.apply(v,graph_name)
+        return changes
 

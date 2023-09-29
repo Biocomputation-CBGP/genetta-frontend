@@ -60,20 +60,10 @@ class DataMiner:
         #results += self._language.get_all_nouns(text)   
         return list(set(results))
     
-    def mine_derivatives(self,subject,texts):
-        '''
-        Returns the list of potential derivatives of subject 
-        from list of text.
-        '''
-        return None
-    
-    def mine_interactions(self,subject,texts):
-        '''
-        Returns the dict, where keys are interactions and values is a list 
-        of tuples where t[0] = participant and t[1] = participant type.
-        '''
-        return None
-    
+    def word_similarity(self,word,words):
+        for w in words:
+            yield self._language.similarity(word,w)
+        
     # -- Ontology -- 
 
     # -- Graph analyser --     

@@ -5,9 +5,13 @@ from app.graph.design_graph.design_graph import DesignGraph
 from app.graph.truth_graph.modules.synonym import SynonymModule
 from app.graph.truth_graph.modules.derivative import DerivativeModule
 from app.graph.truth_graph.modules.interaction import InteractionModule
-from app.graph.utility.graph_objects.node import Node
+from app.graph.truth_graph.modules.module import InteractionModuleModule
+from app.graph.truth_graph.modules.usage import UsageModule
 from app.graph.utility.graph_objects.edge import Edge
 from app.graph.utility.graph_objects.reserved_edge import ReservedEdge
+from app.graph.utility.graph_objects.reserved_node import ReservedNode
+from app.graph.truth_graph.gds.procedures import TruthProcedures
+from app.graph.truth_graph.gds.project import TruthProjectBuilder
 
 p_confidence = str(model.identifiers.external.confidence)
 p_synonym = str(model.identifiers.external.synonym)
@@ -20,9 +24,13 @@ index_on = ["name",model.identifiers.external.description]
 class TruthGraph(DesignGraph):
     def __init__(self, name, driver):
         super().__init__(driver,name)
+        self.procedure = TruthProcedures(self)
+        self.project = TruthProjectBuilder(self)
         self.synonyms = SynonymModule(self)
         self.interactions = InteractionModule(self)
         self.derivatives = DerivativeModule(self)
+        self.modules = InteractionModuleModule(self)
+        self.usage = UsageModule(self)
         self._np = {"graph_name": self.name}
         self._create_text_index(index_name,index_labels,index_on)
     
@@ -95,7 +103,7 @@ class TruthGraph(DesignGraph):
                 props = ele["properties"]
             else:
                 props = self._np
-            return Node(k, t, id=iden, **props)
+            return ReservedNode(k, t, id=iden, **props)
         data = []
         with open(fn) as f:
             data = json.load(f)

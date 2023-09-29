@@ -30,17 +30,22 @@ class TruthDesignExtraction(AbstractExpansion):
     def integrate_design(self,graph_name):
         if not isinstance(graph_name,list):
             graph_name = [graph_name]
-
+        if len(graph_name) == 0:
+            return
+        
         d_graph = self._wg.get_design(graph_name)
         entities = d_graph.get_physicalentity()
 
         i_graph = self._tg.interactions.get()
         t_pes = self._tg.get_physicalentity()
         seen_interactions = []
+        integated_entities = []
         for o_entity in entities:
             entity = self._resolve_entity(o_entity,t_pes)
-            if entity != o_entity:
+            if not entity.is_equal(o_entity):
                 self._tg.synonyms.positive(entity,o_entity.get_key())
+            if len(d_graph.get_haspart(entity)) == 0:
+                integated_entities.append(entity)
             for interaction in d_graph.get_interactions(o_entity):
                 res_entities = []
                 interaction = interaction.n
@@ -67,6 +72,16 @@ class TruthDesignExtraction(AbstractExpansion):
                 for part in res_entities:
                     self._tg.interactions.positive(interaction,part[0],
                                                    part[1])
+        seens = []
+        for ie in integated_entities:
+            for ie1 in integated_entities:
+                if ie == ie1:
+                    continue
+                if (ie,ie1) in seens:
+                    continue
+                seens.append((ie,ie1))
+                self._tg.usage.positive(ie,ie1)
+
 
 
     def _is_design_specific(self,interaction,elements):

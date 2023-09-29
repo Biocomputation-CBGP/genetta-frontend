@@ -317,6 +317,10 @@ class Neo4jInterface:
                         results.append(v)
         return results
 
+    def count_edges(self,e_type):
+        qry = self.qry_builder.count_edge(e_type)
+        return self.run_query(qry)[0]["count(e)"]
+    
     def labels_to_node(self, labels):
         return Node(*self.derive_key_type(labels))
 

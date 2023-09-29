@@ -174,6 +174,14 @@ class TestViews(unittest.TestCase):
         graph = self.builder.view
         self.assertTrue(len(graph) > 0)        
 
+    def test_positional(self):
+        self.builder.set_positional_view()
+        self.builder.build()
+        graph = self.builder.view
+        for edge in graph.edges():
+            print(edge)
+        self.assertTrue(len(graph) > 0) 
+
     def test_views_multiple_graphs_any(self):
         gn1 = "test_wg_get_all1"
         gn2 = "test_wg_get_all2"

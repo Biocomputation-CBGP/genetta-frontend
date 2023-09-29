@@ -53,7 +53,6 @@ class TestCanonical(unittest.TestCase):
                 score = aligner.sequence_match("AACGATGGTTGGCTGTGTTGACAATTATTCATCGGCTCGTATAATGAGTGGAATTGTGAGCGCTCACAATT",pe.hasSequence)
                 score = int(score*100)
                 if score > 70:
-                    print(pe,score)
     def test_get_truth_absolute(self):
         t_pes = self.wg.truth.get_physicalentity()
 

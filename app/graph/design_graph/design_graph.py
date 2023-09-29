@@ -31,6 +31,7 @@ def _add_object(obj, subject):
         produce_get_subject(subject), obj)
 
 nv_has_seq = str(model.identifiers.predicates.has_sequence)
+
 class DesignGraph:
     def __init__(self, driver, name):
         if not isinstance(name, list):
@@ -65,6 +66,13 @@ class DesignGraph:
             if not isinstance(description,list):
                 description = [description]
             kwargs[DCTERMS.description] = description
+        if "name" not in kwargs:
+            if hasattr(key,"name"):
+                name = key.name
+            else:
+                name = _get_name(key)
+            kwargs["name"] = name
+            
         n = self.driver.add_node(key,type,**kwargs)
         self.driver.submit()
         return n
@@ -122,7 +130,9 @@ class DesignGraph:
             self.driver.remove_edge(n,v,e,**props)
         self.driver.submit()
 
-    
+    def count_edges(self,e_type):
+        return self.driver.count_edges(e_type)
+
     def duplicate_node(self,old,new,graph_name):
         self.driver.duplicate_node(old,new,graph_name)
 
@@ -231,19 +241,21 @@ class DesignGraph:
                 roots.append(node)
         return roots
         
-    def get_interactions(self,node=None,predicate=None):
+    def get_interactions(self,node=None,e_type=None,predicate="ALL"):
         s = model.identifiers.objects.interaction
         derived = ([s] + [n[1]["key"] for n in model.get_derived(s)])
-        return self._edge_query(n=derived,v=node,e=predicate)
+        return self._edge_query(n=derived,v=node,e=e_type,
+                                predicate=predicate)
 
-    def get_interaction_elements(self,interaction,predicate=None):
-        if predicate is None:
+    def get_interaction_elements(self,interaction,e_type=None,predicate="ALL"):
+        if e_type is None:
             model_code = model.get_class_code(interaction.get_type())
             inp,out = model.interaction_predicates(model_code)
-            predicate = [str(i[1]["key"]) for i in inp]
-            predicate += [str(o[1]["key"]) for o in out]
+            e_type = [str(i[1]["key"]) for i in inp]
+            e_type += [str(o[1]["key"]) for o in out]
             
-        return self._edge_query(n=interaction,e=predicate)
+        return self._edge_query(n=interaction,e=e_type,
+                                predicate=predicate)
 
     def get_interaction_io(self, subject,predicate="ALL"):
         inputs = []
@@ -293,7 +305,13 @@ class DesignGraph:
                 break
             next_node = r.v
         return elements
-
+    
+    def position_walk(self):
+        pos_proj_name = "-".join(self.name) + "_position_projection"
+        sources = self.project.position(pos_proj_name)
+        paths = self.procedure.dfs(pos_proj_name,sources)
+        return [p["path"] for p in paths]
+            
     def get_project_preset_names(self):
         return self.project.get_presets()
 
@@ -328,7 +346,7 @@ class DesignGraph:
 
 def _get_name(subject):
     split_subject = _split(subject)
-    if len(split_subject[-1]) == 1 and split_subject[-1].isdigit():
+    if split_subject[-1].isdigit():
         return split_subject[-2]
     elif len(split_subject[-1]) == 3 and _isfloat(split_subject[-1]):
         return split_subject[-2]

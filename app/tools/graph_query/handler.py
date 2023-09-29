@@ -3,6 +3,7 @@ from app.tools.graph_query.datatype_handlers.derivative import DerivativeHandler
 from app.tools.graph_query.datatype_handlers.interaction import InteractionHandler
 from app.tools.graph_query.datatype_handlers.metadata import MetadataHandler
 from app.tools.graph_query.datatype_handlers.sequence import SequenceHandler
+from app.tools.graph_query.datatype_handlers.modules import ModuleHandler
 class GraphQueryHandler:
     def __init__(self,graph):
         self._graph = graph
@@ -10,7 +11,8 @@ class GraphQueryHandler:
                         DerivativeHandler(graph),
                         InteractionHandler(graph),
                         MetadataHandler(graph),
-                        SequenceHandler(graph)]
+                        SequenceHandler(graph),
+                        ModuleHandler(graph)]
 
     def get_handlers(self):
         return self._handlers

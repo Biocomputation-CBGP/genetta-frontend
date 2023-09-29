@@ -27,11 +27,35 @@ class AbstractModule(ABC):
             g.add_edge(edge)
         return g
     
-    def positive(self,edges):
-        return self._change(edges,self._standard_modifier)
+    def positive(self,n,v,e,score=None):
+        n = self._cast_node(n)
+        v = self._cast_node(v)
+        if score is None:
+            score = self._standard_modifier
+        if score < 1:
+            score = int(score *100)
+        edge = self._cast_edge(n,v,e)
+        # Check if the subject is in the graph.
+        res = self._tg.edge_query(n=edge.n,v=edge.v,e=edge.get_type())
+        if len(res) != 0:
+            assert(len(res) == 1)
+            return self._update_confidence(res[0],score)
+        else:
+            return self._add_new_edge(edge,score)
     
-    def negative(self,edges):
-        return self._change(edges,-self._standard_modifier)
+    def negative(self,n,v,e,score=None):
+        n = self._cast_node(n)
+        v = self._cast_node(v)
+        if score is None:
+            score = self._standard_modifier
+        if score < 1:
+            score = int(score *100)
+        edge = self._cast_edge(n,v,e)
+        # Check if the subject is in the graph.
+        res = self._tg.edge_query(n=edge.n,v=edge.v,e=edge.get_type())
+        if len(res) != 0:
+            assert(len(res) == 1)
+            return self._update_confidence(res[0],-score)
 
     def get(self,edge):
         res = self._tg.edge_query(e=edge)

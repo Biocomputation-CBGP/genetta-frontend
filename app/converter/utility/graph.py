@@ -335,6 +335,43 @@ class SBOLGraph:
             return [i[0] for i in self.graph.get_subject(identifiers.predicates.participation,participation)]
         return [i[0] for i in self.graph.get_instances(identifiers.objects.interaction)]
 
+    def get_start(self,location):
+        try:
+            return self.graph.get_object(location,identifiers.predicates.start,True)[2]
+        except IndexError:
+            return None
+        
+    def get_end(self,location):
+        try:
+            return self.graph.get_object(location,identifiers.predicates.end,True)[2]
+        except IndexError:
+            return None
+        
+    def get_at(self,location):
+        try:
+            return self.graph.get_object(location,identifiers.predicates.at,True)[2]
+        except IndexError:
+            return None
+        
+    def get_sc_subject(self,sc):
+        try:
+            return self.graph.get_object(sc,identifiers.predicates.sequence_constraint_subject,True)[2]
+        except IndexError:
+            return None
+        
+    def get_sc_object(self,sc):
+        try:
+            return self.graph.get_object(sc,identifiers.predicates.sequence_constraint_object,True)[2]
+        except IndexError:
+            return None
+        
+    def get_sc_restriction(self,sc):
+        try:
+            return self.graph.get_object(sc,identifiers.predicates.sequence_constraint_restriction,True)[2]
+        except IndexError:
+            return None
+
+        
     def is_discontinued(self,subject):
         return self.get_property(subject,identifiers.predicates.discontinued) == Literal("true")
 

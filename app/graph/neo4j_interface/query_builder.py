@@ -187,6 +187,10 @@ class QueryBuilder:
         SET newRel = r
         RETURN newNode
         '''
+    
+    def count_edge(self,e_type):
+        return f'''match(n) - [e:`{e_type}`] - (v) return count(e)'''
+    
     def get_isolated_nodes(self,identity=[],predicate="ALL",**kwargs):
         where = ""
         for index, i in enumerate(identity):

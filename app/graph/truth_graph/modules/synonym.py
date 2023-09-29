@@ -46,7 +46,8 @@ class SynonymModule(AbstractModule):
                     return res[0]
             else:
                 # New synonym to existing subject
-                edge = self._cast_edge(subject,synonym,p_synonym,name="Synonym")
+                edge = self._cast_edge(subject,synonym,
+                                       p_synonym,name="Synonym")
                 self._add_new_edge(edge,confidence=score)
                 return edge
         syn_node = self._tg.node_query(synonym)
@@ -67,9 +68,7 @@ class SynonymModule(AbstractModule):
         # Same as positive but without adding any new edges.
         subject = self._cast_node(subject)
         synonym = self._cast_node(synonym)
-        print(subject)
         res = self._tg.edge_query(subject,e=p_synonym)
-        print(res)
         if len(res) != 0:
             for edge in res:
                 if synonym.get_key() == edge.v.get_key():

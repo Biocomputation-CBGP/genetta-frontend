@@ -9,6 +9,6 @@ class ProvenanceViewBuilder(AbstractViewBuilder):
         return ViewGraph(super()._subgraph(edges,nodes,new_graph))
 
     def build(self,predicate="ALL"):
-        return self._subgraph(self._graph.derivatives.get())
+        return self._subgraph(self._graph.derivatives.get().derivatives())
 
 

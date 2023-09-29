@@ -50,7 +50,7 @@ class TestDesignExtraction(unittest.TestCase):
     def test_design_extraction_expansion(self):
         designs = [os.path.join("files","0x87.xml")]
         for d in designs:
-            d_n = d.split(os.pathsep)[-1].split(".")[0]
+            d_n = d.split(os.path.sep)[-1].split(".")[0]
             file_convert(self.wg.driver, d,d_n)
         self.delete_graphs.append(d_n)
         pre_e = self.tg.edges()
@@ -207,6 +207,33 @@ class TestDesignExtraction(unittest.TestCase):
                     exist += design.get_interactions(e.v.get_key())
             self.assertIn(d.n.get_key(),[e.n.get_key()for e in exist])
             self.tg.interactions.negative(d.n,d.v,d.get_type())
+
+
+    def test_integrate_design_commonly_used(self):
+        fn = os.path.join("files","canonical_AND.xml")
+        d_n = "canonical_AND"
+        self.wg.remove_design(d_n)
+        if d_n not in self.wg.get_design_names():
+            file_convert(self.wg.driver, fn,d_n)
+        self.delete_graphs.append(d_n)
+        design = self.wg.get_design(d_n)
+        #self.ppe.integrate_design(d_n)
+        u_graph = self.tg.usage.get()
+        tg_entities = [e.get_key() for e in self.tg.get_physicalentity()]
+        d_pgs = design.get_physicalentity()
+        for entity in d_pgs:
+            if entity.get_key() in tg_entities:
+                self.assertTrue(u_graph.has_node(entity.get_key()))
+            try:
+                e_usage = [s.v.get_key() for s in u_graph.usage(entity.get_key())]
+            except ValueError:
+                continue
+            for e1 in d_pgs:
+                if entity == e1:
+                    continue
+                if e1.get_key() not in tg_entities:
+                    continue
+                self.assertIn(e1.get_key(),e_usage)
 
 
 

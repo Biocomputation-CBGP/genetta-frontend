@@ -477,66 +477,56 @@ def canonicalise():
 @login_required
 def enhancement():
     d_names = graph.get_design_names()
-    pipelines = ["all"] + enhancer.get_pipeline_names()
-    upload = forms.add_enhance_graph_form(pipelines)
-    cg = forms.add_choose_graph_enhancement_form(d_names, pipelines)
+    user_d_names = _get_user_gn(d_names)
+    run_e = forms.add_enhancement_form(user_d_names)
     p_changes = None
     changes = None
-    feedback = None
     gn = None
     if request.method == "POST":
         if "close" in request.form:
-            return render_template("enhancement.html",  cg=cg)
-        elif upload.validate_on_submit():
-            gn, rm, error = _upload_graph(upload)
-            if error is not None:
-                return render_template("enhancement.html",  cg=cg,error_str=error)
-            pipeline = upload.pipelines.data
-        elif cg.validate_on_submit():
-            rm = cg.run_mode.data
-            gn = cg.graphs.data
-            pipeline = cg.pipelines.data
-        if gn is not None:
-            if pipeline == "all":
-                pipeline = None
+            return render_template("enhancement.html",  run_e=run_e)
+        elif run_e.validate_on_submit():
+            automate = run_e.automate.data
+            gn = run_e.graphs.data
+            if automate:
+                changes = enhancer.enhance(gn, automated=True)
             else:
-                pipeline = enhancer.cast_pipelines(pipelines)
-            if upload.run_mode.data == "semi":
-                p_changes, feedback = enhancer.enhance_design(
-                    gn, mode=rm, pipeline=pipeline)
-            elif upload.run_mode.data == "automated":
-                changes, feedback = enhancer.enhance_design(
-                    gn, mode=rm, pipeline=pipeline)
-
-        if "submit_semi_enhancer" in request.form:
+                p_changes = enhancer.enhance(gn, automated=False)
+        if "submit_enhancer" in request.form:
             replacements = {}
             for k, v in request.form.items():
-                if k == "submit_semi_enhancer":
+                if k == "submit_enhancer":
                     continue
                 if v == "y":
-                    old, new = k.split()
-                    replacements[old] = new
-                elif v != "none":
-                    replacements[k] = v
+                    enhancer_mod,old, new = k.split()
+                    if enhancer_mod not in replacements:
+                        replacements[enhancer_mod] = {}
+                    if old in replacements[enhancer_mod]:
+                        existing = replacements[enhancer_mod][old]
+                        if isinstance(existing,list):
+                            replacements[enhancer_mod][old].append(new)
+                        else:
+                            replacements[enhancer_mod][old] = [existing,
+                                                               new]
+                    else:
+                        replacements[enhancer_mod][old] = new
             gn = session["c_gn"]
-            changes = enhancer.apply_enhancement(replacements, gn)
+            changes = enhancer.apply_enhance(replacements, gn)
             del session["c_gn"]
-            del session["feedback"]
 
         if p_changes is not None:
             if len(p_changes) == 0:
-                return render_template("enhancement.html",  cg=cg, no_changes=True)
+                return render_template("enhancement.html", run_e=run_e, no_changes=True)
             changes = forms.add_semi_enhancer_form(p_changes)
             session["c_gn"] = gn
-            session["feedback"] = feedback
-            return render_template("enhancement.html",  cg=cg, p_changes=changes, gn=gn)
+            return render_template("enhancement.html", run_e=run_e, p_changes=changes, gn=gn)
         if changes is not None:
             if len(changes) == 0:
-                return render_template("enhancement.html",  cg=cg, no_changes=True)
+                return render_template("enhancement.html", run_e=run_e, no_changes=True)
             else:
-                session["feedback"] = feedback
-                return render_template("enhancement.html",  cg=cg, s_changes=changes, gn=gn)
-    return render_template("enhancement.html",  cg=cg)
+                return render_template("enhancement.html", run_e=run_e, s_changes=changes, gn=gn)
+            
+    return render_template("enhancement.html",  run_e=run_e)
 
 @server.route('/tutorial', methods=['GET', 'POST'])
 def tutorial():

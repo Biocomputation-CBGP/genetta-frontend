@@ -1,17 +1,4 @@
-'''
-Case Group 1: A direct reference to a standard part is in the uri. 
-    Case 1.1: The name is a standard name but part of a fake uri:
-    Case 1.2. The name has an indirect reference,
-Case Group 2: The object has a sequence match with a standardised part.
-    Case 2.1: Direct Sequence Match
-    Case 2.2: Similar Sequence Match
-Case Group 3: Metadata reveals a standardised part.
-    Case 3.1: A direct reference is encoded.
-    Case 3.2. A name is driectrly encoded.
-    Case 3.3: Metadata query reveals a potential reference
-Case Group 4: The object is the parent/child of 
-              in some way refers to a known standardised part. 
-                
+'''                
 Overview of the process:
 1. Absolute References
     1.1. Check if an entity name refers directly to a record.
@@ -22,15 +9,12 @@ Overview of the process:
     2.1. Partial Sequence Match.
     2.1  Mid/Low confidence synonym from Truth Graph.
     2.1. Partial Descriptor From metadata.
-
 3. Post-Processing Score
     3.1. Chance to increase score by comparing entites within the graph.
 '''
 from app.tools.enhancer.enhancements.abstract_enhancements import AbstractEnhancement
 from app.graph.utility.model.model import model
 from app.graph.utility.graph_objects.node import Node
-import uuid
-from app.converter.sbol_convert import convert
 from app.tools.aligner import aligner
 
 nv_has_sequence = str(model.identifiers.predicates.has_sequence)

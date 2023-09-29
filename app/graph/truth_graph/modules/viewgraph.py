@@ -1,25 +1,35 @@
 import networkx as nx
-from app.graph.utility.graph_objects.reserved_node import ReservedNode
+from app.graph.utility.graph_objects.node import Node
 from app.graph.utility.graph_objects.reserved_edge import ReservedEdge
 from app.graph.utility.model.model import model
 
 all_i_types = [str(i[1]["key"]) for i in model.get_derived(model.identifiers.objects.interaction)]
 nv_derivative = str(model.identifiers.external.derivative)
 nv_synonym = str(model.identifiers.external.synonym)
+nv_usage = str(model.identifiers.predicates.commonly_used_with)
+nv_module = str(model.identifiers.objects.module)
+
 class ViewGraph:
     def __init__(self, graph=None): 
         self._graph = graph if graph is not None else nx.MultiDiGraph()
 
     def resolve_node(func):
         def inner(self,n=None):
-            if isinstance(n,ReservedNode):
-                n = n.id
+            def _key_search(key):
+                for node in self.nodes():
+                    if node.get_key() == key:
+                        return node.id
+                raise ValueError(f'{node} not in viewgraph.')
+                    
+            if isinstance(n,Node):
+                if n.id is not None:
+                    n = n.id
+                else:
+                    n = _key_search(n.get_key())
             elif n in self.nodes():
                 n = n
             else:
-                for node in self.nodes():
-                    if node.get_key() == n:
-                        n = node.id
+                n = _key_search(n)
             return func(self,n)
         return inner
         
@@ -44,7 +54,7 @@ class ViewGraph:
         return self.__class__(nx.compose(self._graph,viewgraph._graph))
         
     def _find_node(self,n):
-        if isinstance(n,ReservedNode):
+        if isinstance(n,Node):
             return n.id
         elif n in self.nodes():
             return n
@@ -58,7 +68,7 @@ class ViewGraph:
             props = {}
         else:
             props = properties
-        return ReservedNode(labels,id=id,**props)
+        return Node(labels,id=id,**props)
     
     def _edge(self,n,v,e,properties=None):
         if properties is None:
@@ -83,10 +93,25 @@ class ViewGraph:
                     continue
                 yield e
     
+    def usage(self,node=None):
+        o_edges = list(self.out_edges(node))
+        for edge in o_edges:
+            if edge.get_type() == nv_usage:
+                yield edge
+        for edge in self.in_edges(node):
+            if edge in o_edges:
+                continue
+            if edge.get_type() == nv_usage:
+                e = ReservedEdge(edge.v,edge.n,edge.get_type(),
+                                   **edge.get_properties())
+                if e in o_edges:
+                    continue
+                yield e
+
     def synonyms(self,canonical=None,synonym=None):
-        if isinstance(canonical,ReservedNode):
+        if isinstance(canonical,Node):
             canonical = canonical.get_key()
-        if isinstance(synonym,ReservedNode):
+        if isinstance(synonym,Node):
             synonym = synonym.get_key()
         if canonical is not None:
             for edge in self.out_edges(canonical):
@@ -131,6 +156,16 @@ class ViewGraph:
 
     def interaction_elements(self,interaction):
         return self.out_edges(interaction)
+    
+    def modules(self,module=None,object=None,e_type=None):
+        if module is not None:
+            return [e for e in self.out_edges(module) if 
+                    e_type is None or e.get_type() in e_type] 
+        elif object is not None:
+            return [e for e in self.in_edges(object) if 
+                    e_type is None or e.get_type() in e_type] 
+        else:
+            return [n for n in self.nodes() if n.get_type() == nv_module]
     
     def nodes(self):
         for n,data in self._graph.nodes(data=True):
@@ -197,10 +232,12 @@ class ViewGraph:
             v = self._node(labels,id=v,properties=props)
             yield self._edge(n,v,e,properties=d)
 
-
-
     def has_edge(self,edge):
         return self._graph.has_edge(edge.n.id,edge.v.id,key=edge.get_type())
+    
+    @resolve_node
+    def has_node(self,node):
+        return self._graph.has_node(node)
     
     def add_edge(self, edge):
         self._graph.add_edge(edge.n.id,edge.v.id,key=edge.get_type(),**edge.get_properties())

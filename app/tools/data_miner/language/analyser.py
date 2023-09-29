@@ -45,4 +45,10 @@ class LanguageAnalyser:
 
     def get_all_uris(self,text):
         return re.findall(iri_p, text)
+    
+
+    def similarity(self,word1,word2):
+        token1 = self.nlp(word1)
+        token2 = self.nlp(word2)
+        return token1.similarity(token2)
         

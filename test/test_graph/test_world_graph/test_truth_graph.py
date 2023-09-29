@@ -11,6 +11,7 @@ from app.graph.world_graph import WorldGraph
 from app.graph.truth_graph.modules.abstract_module import AbstractModule
 from app.graph.truth_graph.modules.synonym import SynonymModule
 from app.graph.truth_graph.modules.interaction import InteractionModule
+from app.graph.truth_graph.modules.module import InteractionModuleModule
 from app.graph.truth_graph.modules.derivative import DerivativeModule
 from app.graph.utility.graph_objects.reserved_edge import ReservedEdge
 from app.graph.utility.graph_objects.reserved_node import ReservedNode
@@ -722,4 +723,97 @@ class TestDerivativeModule(unittest.TestCase):
         res = self.module.get(node,vertex,threshold=5)
         res = list(res.edges())
         self.assertEqual([],res)
-                             
+
+    def test_are_derivatives(self):
+        d_graph = self.module.get()
+        ders = list(d_graph.derivatives())
+        self.assertTrue(self.module.are_derivatives(ders[0].n,ders[0].v))
+        self.assertFalse(self.module.are_derivatives(ders[0].n,ders[3].v))
+
+
+nv_module = str(model.identifiers.objects.module)
+nv_has_interaction = str(model.identifiers.predicates.hasInteraction)
+class TestInteractionModuleModule(unittest.TestCase):
+    @classmethod
+    def setUpClass(self):
+        self.wg = WorldGraph(uri,db_auth,reserved_names=[login_graph_name])
+        self.tg = self.wg.truth
+        self.module = InteractionModuleModule(self.tg)
+        self.props = {"graph_name" : self.tg.name}
+    @classmethod
+    def tearDownClass(self):
+        pass
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def _edge_equal(self,actual,expected):
+        expected.n.properties["graph_name"] = self.tg.name
+        expected.n.graph_name = self.tg.name
+        expected.v.properties["graph_name"] = self.tg.name
+        expected.v.graph_name = self.tg.name
+        expected.properties["graph_name"] = self.tg.name
+        expected.graph_name = self.tg.name
+        self.assertEqual(actual,expected)
+    
+    def test_get(self):
+        node = ReservedNode("www.test_nv/NOR/1",nv_module,**self.props)
+        i_name = list(self.tg.interactions.get().nodes())[0]
+        edge = ReservedEdge(node,i_name,nv_has_interaction,**self.props)
+        for a in range(0,5):
+            self.module.positive(node,i_name,nv_has_interaction)
+
+        graph = self.module.get()
+        modules = graph.modules()
+        self.assertIn(node,modules)
+        parts = graph.modules(node)
+        self.assertIn(edge,parts)
+        modules = graph.modules(object=i_name)
+        self.assertIn(edge,modules)
+        
+        graph = self.module.get(node)
+        modules = graph.modules()
+        self.assertIn(node,modules)
+        parts = graph.modules(node)
+        self.assertIn(edge,parts)
+        modules = graph.modules(object=i_name)
+        self.assertIn(edge,modules)
+
+        graph = self.module.get(object=i_name)
+        modules = graph.modules()
+        self.assertIn(node,modules)
+        parts = graph.modules(node)
+        self.assertIn(edge,parts)
+        modules = graph.modules(object=i_name)
+        self.assertIn(edge,modules)
+
+        self.tg.remove_edges(edge)
+        self.tg.driver.submit()
+
+    def test_interaction_positive(self):
+        node = ReservedNode("www.test_nv/NOR/1",nv_module,**self.props)
+        i_name = list(self.tg.interactions.get().nodes())[0]
+        edge = ReservedEdge(node,i_name,nv_has_interaction,**self.props)
+        self.tg.remove_edges(edge)
+        self.tg.driver.submit()
+        for a in range(0,5):
+            self.module.positive(node,i_name,nv_has_interaction)
+        res = self.module.get(node,i_name,threshold=5)
+        res = list(res.edges())
+        self.assertEqual([edge],res)
+        self.assertEqual(res[0].confidence,25)
+
+
+        for a in range(0,4):
+            self.module.negative(node,i_name,nv_has_interaction)
+        res = self.module.get(node,i_name,threshold=5)
+        res = list(res.edges())
+        self.assertEqual([edge],res)
+        self.assertEqual(res[0].confidence,5)
+        self.module.negative(node,i_name)
+        res = self.module.get(node,i_name,threshold=5)
+        res = list(res.edges())
+        self.assertEqual([],res)

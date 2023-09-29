@@ -8,6 +8,8 @@ from entities.protein import *
 from entities.chemical import *
 from entities.interaction import *
 from entities.synonym import *
+from entities.position import *
+from entities.module import *
 def produce_ontology_graph():
     graph = bu.produce_ontology(__name__)
     graph.serialize("nv_design.xml",format="pretty-xml")

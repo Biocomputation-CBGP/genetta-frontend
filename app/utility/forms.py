@@ -197,26 +197,53 @@ def add_semi_canonicaliser_form(choices, **kwargs):
     setattr(SemiCanonicaliserGraphForm, "forms", FormField(stage_form))
     return SemiCanonicaliserGraphForm(**kwargs)
 
-def add_enhance_graph_form(pipelines,**kwargs):
-    class UploadEnhanceDesignPipelineForm(UploadEnhanceDesignForm):
-        class Meta:
-            csrf = False
-    setattr(UploadEnhanceDesignPipelineForm, "pipelines", SelectField(
-        "Enhancement Factor", choices=[(c, c) for c in pipelines]))
-    return UploadEnhanceDesignPipelineForm(**kwargs)
 
-def add_choose_graph_enhancement_form(choices,pipelines, **kwargs):
+
+def add_enhancement_form(choices, **kwargs):
     class ChooseGraphForm(FlaskForm):
         class Meta:
             csrf = False
         submit = SubmitField('Submit')
-        run_mode = BooleanField("Run Mode")
+        automate = BooleanField("Automated")
     setattr(ChooseGraphForm, "graphs", SelectField(
         "Graph Name", choices=[(c, c) for c in choices]))
-    setattr(ChooseGraphForm, "pipelines", SelectField(
-        "Enhancement Factor", choices=[(c, c) for c in pipelines]))
     return ChooseGraphForm(**kwargs)
 
+def add_semi_enhancer_form(choices, **kwargs):
+    stage_forms = []
+    class EnhancerMainForm(FlaskForm):
+        submit_enhancer = SubmitField("Submit")
+        cancel_enhancer = SubmitField("Cancel")
+    for enhancer,enhancements in choices.items():
+        class EnhancerForm(FlaskForm):
+            class Meta:
+                csrf = False
+            name = enhancer
+        setattr(EnhancerForm, "num_enhancements", len(enhancements))
+        enable_all_id = f'{enhancer} enable_all'
+        setattr(EnhancerForm, enable_all_id,BooleanField(id="enable_all"))
+        
+        enhancement_forms = []
+        for subject,choices in enhancements.items():
+            choice_fields = []
+            class ChoiceForm(FlaskForm):
+                class Meta:
+                    csrf = False
+                name = subject
+            for choice,details in choices.items():
+                field_id = f'{enhancer} {subject} {choice}'
+                data = {"label":details["comment"],"description": details["score"]}
+                choice_fields.append((field_id,BooleanField,data))
+
+            choice_form = form_from_fields([(field_id,f_type(**data)) for 
+                                            field_id,f_type,data in choice_fields])
+            setattr(ChoiceForm, "choices",FormField(choice_form))
+            enhancement_forms.append(ChoiceForm())
+
+        setattr(EnhancerForm, "enhancements",enhancement_forms)
+        stage_forms.append(EnhancerForm())
+    setattr(EnhancerMainForm, "forms", stage_forms)
+    return EnhancerMainForm(**kwargs)
 
 def create_example_design_form(expanation_file, **kwargs):
     class ExampleDesignForm(FlaskForm):

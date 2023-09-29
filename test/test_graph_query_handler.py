@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join("..","..","..",".."))
 
 from app.tools.graph_query.handler import GraphQueryHandler
 from app.tools.graph_query.datatype_handlers.sequence import SequenceHandler
+from app.tools.graph_query.datatype_handlers.modules import ModuleHandler
 from app.graph.world_graph import WorldGraph
 from app.tools.aligner import aligner
 from app.graph.utility.model.model import model
@@ -485,10 +486,6 @@ class TestGraphQueryHandlerSequence(unittest.TestCase):
             if e.v.get_key() == source:
                 self.assertEqual(e.confidence,pre_conf + self._tg.derivatives._standard_modifier)
 
-
-
-
-
         pre_graph = self._tg.derivatives.get(result,threshold=5)
         pre_edges = list(pre_graph.derivatives())
         try:
@@ -505,6 +502,21 @@ class TestGraphQueryHandlerSequence(unittest.TestCase):
             if e.v.get_key() == source:
                 self.assertEqual(e.confidence,pre_conf - self._tg.derivatives._standard_modifier)
 
+
+class TestGraphQueryHandlerModule(unittest.TestCase):
+    @classmethod
+    def setUpClass(self):
+        self._wg = WorldGraph(uri,db_auth)
+        self._handlers = ModuleHandler(self._wg.truth)
+        self._tg = self._wg.truth
+
+    def test_module_query_direct_match(self):
+        res = self._handlers.handle("Ptet")
+        m_graph = self._tg.modules.get()
+        modules = [str(m) for m in m_graph.modules()]
+        for entity,data in res.items():
+            for res in data:
+                self.assertIn(res[1]["entity"],modules)
 
 def make_random_changes(sequence, percentage):
     num_changes = int(len(sequence) * percentage / 100)
