@@ -19,13 +19,15 @@ class ViewGraph:
                 for node in self.nodes():
                     if node.get_key() == key:
                         return node.id
-                raise ValueError(f'{node} not in viewgraph.')
+                raise ValueError(f'{key} not in viewgraph.')
                     
             if isinstance(n,Node):
                 if n.id is not None:
                     n = n.id
                 else:
                     n = _key_search(n.get_key())
+            elif n is None:
+                n = None
             elif n in self.nodes():
                 n = n
             else:

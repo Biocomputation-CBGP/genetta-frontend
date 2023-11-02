@@ -20,9 +20,8 @@ class TruthDesignExtraction(AbstractExpansion):
     '''
     Extracts information from designs within the world graph.
     '''
-    def __init__(self, world_graph, miner):
-        super().__init__(world_graph.truth, miner)
-        self._wg = world_graph
+    def __init__(self, truth_graph, miner):
+        super().__init__(truth_graph, miner)
     
     def expand(self):
         self.integrate_design(self._wg.get_design_names())

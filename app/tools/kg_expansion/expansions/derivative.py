@@ -5,7 +5,7 @@ nv_dna = str(model.identifiers.objects.dna)
 nv_dna_cc = model.get_class_code(nv_dna)
 
 
-class TruthDerivative(AbstractExpansion):
+class TruthInteractionDerivative(AbstractExpansion):
     def __init__(self, truth_graph, miner):
         super().__init__(truth_graph, miner)
 

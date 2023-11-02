@@ -1,7 +1,11 @@
 import os
 from app.tools.data_miner.data_miner import data_miner
-from app.tools.kg_expansion.expansions.derivative import TruthDerivative
+from app.tools.kg_expansion.expansions.derivative import TruthInteractionDerivative
 from app.tools.kg_expansion.expansions.protein_production import TruthProteinProduction
+from app.tools.kg_expansion.expansions.topological_interaction import TruthTopologicalInteraction
+from app.tools.kg_expansion.expansions.name_synonym import TruthNameSynonym
+from app.tools.kg_expansion.expansions.modules import TruthModules
+from app.tools.kg_expansion.expansions.identify_derivative import TruthDerivative
 
 tg_initial_fn = os.path.join(os.path.dirname(os.path.realpath(__file__)),"seeder","tg_initial.json")
 
@@ -12,7 +16,16 @@ class TruthGraphBuilder:
         self._modules = [TruthDerivative(self._graph.truth,
                                          self._miner),
                          TruthProteinProduction(self._graph.truth,
-                                                self._miner)]
+                                                self._miner),
+                         TruthInteractionDerivative(self._graph.truth,
+                                                self._miner),
+                         TruthNameSynonym(self._graph.truth,
+                                                self._miner),
+                         TruthModules(self._graph.truth,
+                                                self._miner),
+                         TruthTopologicalInteraction(self._graph.truth,
+                                                self._miner),
+                                                ]
     
     def seed(self):
         '''
